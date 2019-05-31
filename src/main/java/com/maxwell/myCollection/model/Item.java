@@ -6,7 +6,7 @@ public class Item {
 	private Long idOwner;
 	private String Category;
 	private String Name;
-	private String condition;
+	private String itemCondition;
 	private String description;
 	private String photo;
 	private String Trade;
@@ -44,12 +44,12 @@ public class Item {
 		Name = name;
 	}
 
-	public String getCondition() {
-		return condition;
+	public String getItemCondition() {
+		return itemCondition;
 	}
 
-	public void setCondition(String condition) {
-		this.condition = condition;
+	public void setItemCondition(String itemCondition) {
+		this.itemCondition = itemCondition;
 	}
 
 	public String getDescription() {
@@ -86,8 +86,8 @@ public class Item {
 
 	@Override
 	public String toString() {
-		return "Item [id=" + id + ", idOwner=" + idOwner + ", Category=" + Category + ", Name=" + Name + ", condition="
-				+ condition + ", description=" + description + ", photo=" + photo + ", Trade=" + Trade + ", status="
+		return "Item [id=" + id + ", idOwner=" + idOwner + ", Category=" + Category + ", Name=" + Name + ", itemCondition="
+				+ itemCondition + ", description=" + description + ", photo=" + photo + ", Trade=" + Trade + ", status="
 				+ status + "]";
 	}
 
