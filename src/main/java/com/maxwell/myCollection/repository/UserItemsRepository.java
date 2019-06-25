@@ -6,13 +6,13 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.maxwell.myCollection.entity.OwnerItemsEntity;
+import com.maxwell.myCollection.entity.UserItemsEntity;
 
 @Repository
-public interface OwnerItemsRepository extends JpaRepository<OwnerItemsEntity, Long> {
+public interface UserItemsRepository extends JpaRepository<UserItemsEntity, Long> {
 
-	List<OwnerItemsEntity> findAll();
+	List<UserItemsEntity> findAll();
 
-	Optional<OwnerItemsEntity> findById(Long id);
+	Optional<UserItemsEntity> findById(Long id);
 
 }

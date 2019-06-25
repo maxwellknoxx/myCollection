@@ -1,6 +1,6 @@
 package com.maxwell.myCollection.model;
 
-public class OwnerItems {
+public class UserItemsModel {
 
 	private Long id;
 	private Long idOwner;

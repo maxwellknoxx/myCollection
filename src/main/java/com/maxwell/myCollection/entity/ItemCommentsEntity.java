@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "item_comments")
+@Table(name = "items_comments")
 public class ItemCommentsEntity {
 
 	@Id

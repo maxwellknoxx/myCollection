@@ -6,33 +6,33 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.maxwell.myCollection.entity.OwnerEntity;
-import com.maxwell.myCollection.repository.OwnerRepository;
-import com.maxwell.myCollection.service.OwnerService;
+import com.maxwell.myCollection.entity.UserEntity;
+import com.maxwell.myCollection.repository.UserRepository;
+import com.maxwell.myCollection.service.UserService;
 
 @Service
-public class OwnerServiceImpl implements OwnerService {
+public class UserServiceImpl implements UserService {
 
 	@Autowired
-	private OwnerRepository repository;
+	private UserRepository repository;
 
 	@Override
-	public List<OwnerEntity> findAll() {
+	public List<UserEntity> findAll() {
 		return repository.findAll();
 	}
 
 	@Override
-	public Optional<OwnerEntity> findById(Long id) {
+	public Optional<UserEntity> findById(Long id) {
 		return repository.findById(id);
 	}
 
 	@Override
-	public OwnerEntity addOwner(OwnerEntity owner) {
+	public UserEntity addOwner(UserEntity owner) {
 		return repository.save(owner);
 	}
 
 	@Override
-	public OwnerEntity updateOwner(OwnerEntity owner) {
+	public UserEntity updateOwner(UserEntity owner) {
 		return repository.save(owner);
 	}
 

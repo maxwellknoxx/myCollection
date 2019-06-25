@@ -1,42 +1,15 @@
-package com.maxwell.myCollection.entity;
+package com.maxwell.myCollection.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public class UserModel {
 
-@Entity
-@Table(name = "owner")
-public class OwnerEntity {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
-	@Column(name = "user", nullable = false)
 	private String user;
-
-	@Column(name = "password", nullable = false)
 	private String password;
-
-	@Column(name = "question", nullable = false)
 	private String question;
-
-	@Column(name = "answer", nullable = false)
 	private String answer;
-
-	@Column(name = "number_trades", nullable = false)
 	private Long numberTrades;
-
-	@Column(name = "email", nullable = false)
 	private String email;
-
-	@Column(name = "member_since", nullable = false)
 	private String memberSince;
-
-	@Column(name = "location", nullable = false)
 	private String location;
 
 	public Long getId() {
@@ -113,9 +86,9 @@ public class OwnerEntity {
 
 	@Override
 	public String toString() {
-		return "OwnerEntity [id=" + id + ", user=" + user + ", password=" + password + ", question=" + question
-				+ ", answer=" + answer + ", numberTrades=" + numberTrades + ", email=" + email + ", memberSince="
-				+ memberSince + ", location=" + location + "]";
+		return "Owner [id=" + id + ", user=" + user + ", password=" + password + ", question=" + question + ", answer="
+				+ answer + ", numberTrades=" + numberTrades + ", email=" + email + ", memberSince=" + memberSince
+				+ ", location=" + location + "]";
 	}
 
 }
