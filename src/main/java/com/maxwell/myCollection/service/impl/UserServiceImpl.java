@@ -27,17 +27,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserEntity addOwner(UserEntity owner) {
-		return repository.save(owner);
+	public UserEntity updateUser(UserEntity user) {
+		return repository.save(user);
 	}
 
 	@Override
-	public UserEntity updateOwner(UserEntity owner) {
-		return repository.save(owner);
-	}
-
-	@Override
-	public void removeOwner(Long id) {
+	public void removeUser(Long id) {
 		repository.deleteById(id);
 	}
 

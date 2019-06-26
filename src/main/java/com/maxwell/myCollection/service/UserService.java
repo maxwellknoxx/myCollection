@@ -11,10 +11,8 @@ public interface UserService {
 
 	Optional<UserEntity> findById(Long id);
 
-	UserEntity addOwner(UserEntity owner);
+	UserEntity updateUser(UserEntity user);
 
-	UserEntity updateOwner(UserEntity owner);
-
-	void removeOwner(Long id);
+	void removeUser(Long id);
 
 }

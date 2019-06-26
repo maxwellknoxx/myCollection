@@ -2,6 +2,8 @@ package com.maxwell.myCollection.controller;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
@@ -34,6 +36,8 @@ import com.maxwell.myCollection.security.jwt.JwtProvider;
 @RequestMapping("/api/auth")
 public class AuthRestAPIs {
 
+	private final static Logger LOGGER = Logger.getLogger(AuthRestAPIs.class.getName());
+
 	@Autowired
 	AuthenticationManager authenticationManager;
 
@@ -49,18 +53,36 @@ public class AuthRestAPIs {
 	@Autowired
 	JwtProvider jwtProvider;
 
+	/**
+	 * 
+	 * @param loginRequest
+	 * @return
+	 */
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
 
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+		String jwt = "";
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+		try {
+			Authentication authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-		String jwt = jwtProvider.generateJwtToken(authentication);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+
+			jwt = jwtProvider.generateJwtToken(authentication);
+		} catch (Exception e) {
+			LOGGER.log(Level.WARNING, "Something went wrong: { POST /signin } ");
+		} finally {
+			LOGGER.log(Level.INFO, "Operation { POST /signin } completed");
+		}
 		return ResponseEntity.ok(new JwtResponse(jwt));
 	}
 
+	/**
+	 * 
+	 * @param signUpRequest
+	 * @return
+	 */
 	@PostMapping("/signup")
 	public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
