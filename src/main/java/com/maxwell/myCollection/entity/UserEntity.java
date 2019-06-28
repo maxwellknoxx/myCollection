@@ -3,6 +3,7 @@ package com.maxwell.myCollection.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +28,7 @@ import org.hibernate.annotations.NaturalId;
 public class UserEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@NotBlank
@@ -70,7 +71,15 @@ public class UserEntity {
 
 	@OneToMany
 	@JoinTable(name = "user_items", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "item_id"))
-	private Set<UserItemsEntity> userItems = new HashSet<>();
+	private Set<ItemEntity> userItems = new HashSet<>();
+
+	@ManyToMany(cascade = { CascadeType.ALL })
+	@JoinTable(name = "user_offer", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "offer_id"))
+	private Set<OfferEntity> offers = new HashSet<>();
+	
+	@ManyToMany(cascade = { CascadeType.ALL })
+	@JoinTable(name = "user_message", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "message_id"))
+	private Set<OfferEntity> messages = new HashSet<>();
 
 	public UserEntity() {
 	}
@@ -176,12 +185,20 @@ public class UserEntity {
 		this.roles = roles;
 	}
 
-	public Set<UserItemsEntity> getUserItems() {
+	public Set<ItemEntity> getUserItems() {
 		return userItems;
 	}
 
-	public void setUserItems(Set<UserItemsEntity> userItems) {
+	public void setUserItems(Set<ItemEntity> userItems) {
 		this.userItems = userItems;
+	}
+
+	public Set<OfferEntity> getOffers() {
+		return offers;
+	}
+
+	public void setOffers(Set<OfferEntity> offers) {
+		this.offers = offers;
 	}
 
 }

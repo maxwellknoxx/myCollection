@@ -1,10 +1,18 @@
 package com.maxwell.myCollection.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -12,14 +20,15 @@ import javax.persistence.Table;
 public class ItemEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "id_owner", nullable = false)
-	private Long idOwner;
+	@Column(name = "user_id", nullable = false)
+	private Long user_id;
 
-	@Column(name = "category", nullable = false)
-	private String Category;
+	@OneToOne
+	@JoinTable(name = "item_category", joinColumns = @JoinColumn(name = "item_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+	private CategoryEntity category;
 
 	@Column(name = "name", nullable = false)
 	private String Name;
@@ -39,6 +48,14 @@ public class ItemEntity {
 	@Column(name = "status", nullable = false)
 	private String status;
 
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "item_offers", joinColumns = @JoinColumn(name = "item_id"), inverseJoinColumns = @JoinColumn(name = "offer_id"))
+	private Set<OfferEntity> itemOffers = new HashSet<>();
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "items_commentaries", joinColumns = @JoinColumn(name = "item_id"), inverseJoinColumns = @JoinColumn(name = "commentary_id"))
+	private Set<CommentaryEntity> itemCommentaries = new HashSet<>();
+
 	public Long getId() {
 		return id;
 	}
@@ -47,20 +64,12 @@ public class ItemEntity {
 		this.id = id;
 	}
 
-	public Long getIdOwner() {
-		return idOwner;
+	public Long getUser_id() {
+		return user_id;
 	}
 
-	public void setIdOwner(Long idOwner) {
-		this.idOwner = idOwner;
-	}
-
-	public String getCategory() {
-		return Category;
-	}
-
-	public void setCategory(String category) {
-		Category = category;
+	public void setUser_id(Long user_id) {
+		this.user_id = user_id;
 	}
 
 	public String getName() {
@@ -111,11 +120,28 @@ public class ItemEntity {
 		this.status = status;
 	}
 
-	@Override
-	public String toString() {
-		return "ItemEntity [id=" + id + ", idOwner=" + idOwner + ", Category=" + Category + ", Name=" + Name
-				+ ", itemCondition=" + itemCondition + ", description=" + description + ", photo=" + photo + ", Trade=" + Trade
-				+ ", status=" + status + "]";
+	public CategoryEntity getCategory() {
+		return category;
+	}
+
+	public void setCategory(CategoryEntity category) {
+		this.category = category;
+	}
+
+	public Set<OfferEntity> getItemOffers() {
+		return itemOffers;
+	}
+
+	public void setItemOffers(Set<OfferEntity> itemOffers) {
+		this.itemOffers = itemOffers;
+	}
+
+	public Set<CommentaryEntity> getItemCommentaries() {
+		return itemCommentaries;
+	}
+
+	public void setItemCommentaries(Set<CommentaryEntity> itemCommentaries) {
+		this.itemCommentaries = itemCommentaries;
 	}
 
 }
