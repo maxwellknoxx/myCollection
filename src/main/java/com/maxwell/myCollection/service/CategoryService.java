@@ -7,14 +7,14 @@ import com.maxwell.myCollection.entity.CategoryEntity;
 
 public interface CategoryService {
 
-List<CategoryEntity> findAll();
+	List<CategoryEntity> findAll();
 
-Optional<CategoryEntity> findById(Long id);
+	Optional<CategoryEntity> findById(Long id);
 
-CategoryEntity addCategory(CategoryEntity category); 
+	CategoryEntity addCategory(CategoryEntity category);
 
-CategoryEntity updateCategory(CategoryEntity category); 
+	CategoryEntity updateCategory(CategoryEntity category);
 
-void removeCategory(Long id); 
+	void removeCategory(Long id);
 
 }

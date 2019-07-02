@@ -1,9 +1,9 @@
 package com.maxwell.myCollection.entity;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -25,7 +24,12 @@ import org.hibernate.annotations.NaturalId;
 @Entity
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }),
 		@UniqueConstraint(columnNames = { "email" }) })
-public class UserEntity {
+public class UserEntity implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3523669452536912309L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,17 +73,13 @@ public class UserEntity {
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<RoleEntity> roles = new HashSet<>();
 
-	@OneToMany
-	@JoinTable(name = "user_items", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "item_id"))
-	private Set<ItemEntity> userItems = new HashSet<>();
-
-	@ManyToMany(cascade = { CascadeType.ALL })
-	@JoinTable(name = "user_offer", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "offer_id"))
-	private Set<OfferEntity> offers = new HashSet<>();
+	//@ManyToMany(cascade = { CascadeType.ALL })
+	//@JoinTable(name = "user_offer", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "offer_id"))
+	//private Set<OfferEntity> offers = new HashSet<>();
 	
-	@ManyToMany(cascade = { CascadeType.ALL })
-	@JoinTable(name = "user_message", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "message_id"))
-	private Set<OfferEntity> messages = new HashSet<>();
+	//@ManyToMany(cascade = { CascadeType.ALL })
+	//@JoinTable(name = "user_message", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "message_id"))
+	//private Set<OfferEntity> messages = new HashSet<>();
 
 	public UserEntity() {
 	}
@@ -183,22 +183,6 @@ public class UserEntity {
 
 	public void setRoles(Set<RoleEntity> roles) {
 		this.roles = roles;
-	}
-
-	public Set<ItemEntity> getUserItems() {
-		return userItems;
-	}
-
-	public void setUserItems(Set<ItemEntity> userItems) {
-		this.userItems = userItems;
-	}
-
-	public Set<OfferEntity> getOffers() {
-		return offers;
-	}
-
-	public void setOffers(Set<OfferEntity> offers) {
-		this.offers = offers;
 	}
 
 }

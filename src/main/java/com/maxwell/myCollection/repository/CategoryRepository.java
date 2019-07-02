@@ -11,8 +11,8 @@ import com.maxwell.myCollection.entity.CategoryEntity;
 @Repository
 public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> {
 
-List<CategoryEntity> findAll();
+	List<CategoryEntity> findAll();
 
-Optional<CategoryEntity> findById(Long id);
+	Optional<CategoryEntity> findById(Long id);
 
 }

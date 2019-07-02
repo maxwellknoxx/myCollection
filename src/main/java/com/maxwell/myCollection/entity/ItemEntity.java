@@ -3,14 +3,14 @@ package com.maxwell.myCollection.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -20,15 +20,16 @@ import javax.persistence.Table;
 public class ItemEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue
 	private Long id;
 
-	@Column(name = "user_id", nullable = false)
-	private Long user_id;
-
-	@OneToOne
-	@JoinTable(name = "item_category", joinColumns = @JoinColumn(name = "item_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	@JoinColumn(name = "category_id_fk")
 	private CategoryEntity category;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "user_id_fk", nullable = false)
+	private UserEntity userEntity;
 
 	@Column(name = "name", nullable = false)
 	private String Name;
@@ -48,13 +49,11 @@ public class ItemEntity {
 	@Column(name = "status", nullable = false)
 	private String status;
 
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "item_offers", joinColumns = @JoinColumn(name = "item_id"), inverseJoinColumns = @JoinColumn(name = "offer_id"))
-	private Set<OfferEntity> itemOffers = new HashSet<>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+	private Set<OfferEntity> offers = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "items_commentaries", joinColumns = @JoinColumn(name = "item_id"), inverseJoinColumns = @JoinColumn(name = "commentary_id"))
-	private Set<CommentaryEntity> itemCommentaries = new HashSet<>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+	private Set<CommentaryEntity> commentaries = new HashSet<>();
 
 	public Long getId() {
 		return id;
@@ -62,14 +61,6 @@ public class ItemEntity {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getUser_id() {
-		return user_id;
-	}
-
-	public void setUser_id(Long user_id) {
-		this.user_id = user_id;
 	}
 
 	public String getName() {
@@ -128,20 +119,28 @@ public class ItemEntity {
 		this.category = category;
 	}
 
-	public Set<OfferEntity> getItemOffers() {
-		return itemOffers;
+	public UserEntity getUserEntity() {
+		return userEntity;
 	}
 
-	public void setItemOffers(Set<OfferEntity> itemOffers) {
-		this.itemOffers = itemOffers;
+	public void setUserEntity(UserEntity userEntity) {
+		this.userEntity = userEntity;
 	}
 
-	public Set<CommentaryEntity> getItemCommentaries() {
-		return itemCommentaries;
+	public Set<CommentaryEntity> getCommentaries() {
+		return commentaries;
 	}
 
-	public void setItemCommentaries(Set<CommentaryEntity> itemCommentaries) {
-		this.itemCommentaries = itemCommentaries;
+	public void setCommentaries(Set<CommentaryEntity> commentaries) {
+		this.commentaries = commentaries;
+	}
+
+	public Set<OfferEntity> getOffers() {
+		return offers;
+	}
+
+	public void setOffers(Set<OfferEntity> offers) {
+		this.offers = offers;
 	}
 
 }

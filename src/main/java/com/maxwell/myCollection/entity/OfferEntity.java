@@ -1,14 +1,12 @@
 package com.maxwell.myCollection.entity;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,8 +17,12 @@ public class OfferEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToMany(mappedBy = "offers")
-	private Set<UserEntity> users = new HashSet<>();
+	// @ManyToMany(mappedBy = "offers")
+	// private Set<UserEntity> users = new HashSet<>();
+
+	@ManyToOne
+	@JoinColumn(name = "item_id")
+	private ItemEntity item;
 
 	@Column(name = "description", nullable = false)
 	private String description;
@@ -52,12 +54,12 @@ public class OfferEntity {
 		this.status = status;
 	}
 
-	public Set<UserEntity> getUsers() {
-		return users;
+	public ItemEntity getItem() {
+		return item;
 	}
 
-	public void setUsers(Set<UserEntity> users) {
-		this.users = users;
+	public void setItem(ItemEntity item) {
+		this.item = item;
 	}
 
 }

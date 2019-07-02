@@ -158,8 +158,12 @@ public class CategoryController {
 		
 		try {
 			list = service.findAll();
-			response.setListData(list);
-			response = responseUtils.setMessage(response, "Category deleted", true);
+			if(!list.isEmpty()) {
+				response.setListData(list);
+				response = responseUtils.setMessage(response, "Resources found", true);
+			} else {
+				response = responseUtils.setMessage(response, "Resources not found", false);
+			}
 		} catch (Exception e) {
 			LOGGER.log(Level.WARNING, "Something went wrong { GET /api/category/allCategories } ");
 			throw new ResourceNotFoundException("Something went wrong loading all categories");
