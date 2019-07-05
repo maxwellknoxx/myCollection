@@ -101,14 +101,16 @@ public class CategoryController {
 	public ResponseEntity<Response<CategoryEntity>> updateCategory(@Valid @RequestBody @PathVariable("id") Long id,
 			CategoryEntity request) throws ResourceNotFoundException {
 		Response<CategoryEntity> response = new Response<>();
-		CategoryEntity responseEntity;
+		CategoryEntity entityFromDB;
 
 		try {
-			responseEntity = service.findById(id).orElseThrow();
-			if (responseEntity != null) {
+			entityFromDB = service.findById(id).orElseThrow();
+			if (entityFromDB != null) {
 				service.updateCategory(request);
 				response.setData(request);
 				response = responseUtils.setMessage(response, "Category updated", true);
+			} else {
+				throw new ResourceNotFoundException("Resource not found");
 			}
 		} catch (Exception e) {
 			LOGGER.log(Level.WARNING, "Something went wrong { PUT /api/category/categories/{id} } ");
@@ -150,7 +152,7 @@ public class CategoryController {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping(path = "/api/category/allCategories")
 	public ResponseEntity<Response<CategoryEntity>> findAll() throws ResourceNotFoundException {
 		Response<CategoryEntity> response = new Response<>();

@@ -95,9 +95,10 @@ public class AuthRestAPIs {
 
 		// Creating user's account
 		UserEntity user = new UserEntity(signUpRequest.getName(), signUpRequest.getUsername(), signUpRequest.getEmail(),
-				encoder.encode(signUpRequest.getPassword()), signUpRequest.getLocation(),
-				signUpRequest.getMemberSince(), signUpRequest.getNumberTrades(), signUpRequest.getQuestion(),
-				signUpRequest.getAnswer());
+				encoder.encode(signUpRequest.getPassword()), signUpRequest.getQuestion(), signUpRequest.getAnswer());
+
+		//ProfileEntity profile = new ProfileEntity(signUpRequest.getName(), signUpRequest.getEmail(), 0, "",
+		//		signUpRequest.getLocation(), user);
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<RoleEntity> roles = new HashSet<>();
@@ -119,6 +120,7 @@ public class AuthRestAPIs {
 
 		user.setRoles(roles);
 		userRepository.save(user);
+		
 
 		return ResponseEntity.ok().body("User registered successfully!");
 	}

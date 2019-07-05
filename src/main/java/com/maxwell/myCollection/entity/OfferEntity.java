@@ -17,12 +17,13 @@ public class OfferEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// @ManyToMany(mappedBy = "offers")
-	// private Set<UserEntity> users = new HashSet<>();
-
 	@ManyToOne
 	@JoinColumn(name = "item_id")
 	private ItemEntity item;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private UserEntity userEntity;
 
 	@Column(name = "description", nullable = false)
 	private String description;
@@ -60,6 +61,14 @@ public class OfferEntity {
 
 	public void setItem(ItemEntity item) {
 		this.item = item;
+	}
+
+	public UserEntity getUserEntity() {
+		return userEntity;
+	}
+
+	public void setUserEntity(UserEntity userEntity) {
+		this.userEntity = userEntity;
 	}
 
 }

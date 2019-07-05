@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "items")
 public class ItemEntity {
@@ -52,6 +54,7 @@ public class ItemEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
 	private Set<OfferEntity> offers = new HashSet<>();
 
+	@JsonManagedReference
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
 	private Set<CommentaryEntity> commentaries = new HashSet<>();
 

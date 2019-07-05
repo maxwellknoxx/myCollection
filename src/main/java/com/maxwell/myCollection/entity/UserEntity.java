@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -40,10 +41,6 @@ public class UserEntity implements Serializable {
 	@Column(name = "username", nullable = false)
 	private String username;
 
-	@NotBlank
-	@Size(min = 3, max = 50)
-	private String name;
-
 	@Column(name = "password", nullable = false)
 	private String password;
 
@@ -53,9 +50,6 @@ public class UserEntity implements Serializable {
 	@Column(name = "answer", nullable = false)
 	private String answer;
 
-	@Column(name = "number_trades", nullable = true)
-	private Long numberTrades;
-
 	@NaturalId
 	@NotBlank
 	@Size(max = 50)
@@ -63,36 +57,20 @@ public class UserEntity implements Serializable {
 	@Column(name = "email", nullable = false)
 	private String email;
 
-	@Column(name = "member_since", nullable = false)
-	private String memberSince;
-
-	@Column(name = "location", nullable = false)
-	private String location;
-
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<RoleEntity> roles = new HashSet<>();
 
-	//@ManyToMany(cascade = { CascadeType.ALL })
-	//@JoinTable(name = "user_offer", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "offer_id"))
-	//private Set<OfferEntity> offers = new HashSet<>();
-	
-	//@ManyToMany(cascade = { CascadeType.ALL })
-	//@JoinTable(name = "user_message", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "message_id"))
-	//private Set<OfferEntity> messages = new HashSet<>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userEntity")
+	private Set<OfferEntity> offers = new HashSet<>();
 
 	public UserEntity() {
 	}
 
-	public UserEntity(String name, String username, String email, String password, String location, String memberSince,
-			Long numberTrades, String question, String answer) {
-		this.name = name;
+	public UserEntity(String name, String username, String email, String password, String question, String answer) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.location = location;
-		this.memberSince = memberSince;
-		this.numberTrades = numberTrades;
 		this.question = question;
 		this.answer = answer;
 	}
@@ -111,14 +89,6 @@ public class UserEntity implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getPassword() {
@@ -145,14 +115,6 @@ public class UserEntity implements Serializable {
 		this.answer = answer;
 	}
 
-	public Long getNumberTrades() {
-		return numberTrades;
-	}
-
-	public void setNumberTrades(Long numberTrades) {
-		this.numberTrades = numberTrades;
-	}
-
 	public String getEmail() {
 		return email;
 	}
@@ -161,28 +123,20 @@ public class UserEntity implements Serializable {
 		this.email = email;
 	}
 
-	public String getMemberSince() {
-		return memberSince;
-	}
-
-	public void setMemberSince(String memberSince) {
-		this.memberSince = memberSince;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
 	public Set<RoleEntity> getRoles() {
 		return roles;
 	}
 
 	public void setRoles(Set<RoleEntity> roles) {
 		this.roles = roles;
+	}
+
+	public Set<OfferEntity> getOffers() {
+		return offers;
+	}
+
+	public void setOffers(Set<OfferEntity> offers) {
+		this.offers = offers;
 	}
 
 }
