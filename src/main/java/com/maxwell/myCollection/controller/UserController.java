@@ -8,7 +8,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,7 +39,7 @@ public class UserController {
 	 * 
 	 * @return
 	 */
-	@PreAuthorize("hasRole('ADMIN')")
+	// @PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(path = "/api/users/allUsers")
 	public ResponseEntity<Response<UserEntity>> findAll() throws ResourceNotFoundException {
 		Response<UserEntity> response = new Response<>();
@@ -64,8 +63,8 @@ public class UserController {
 	 * 
 	 * @return
 	 */
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/users/user/{id}")
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@GetMapping(path = "/api/user/users/{id}")
 	public ResponseEntity<Response<UserEntity>> getUser(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		Response<UserEntity> response = new Response<>();
 
@@ -73,10 +72,10 @@ public class UserController {
 			response.setData(service.findById(id).orElseThrow());
 			response = responseUtils.setMessage(response, "Resource found", true);
 		} catch (Exception e) {
-			LOGGER.log(Level.INFO, "Something went wrong { GET /api/users/user/{id} } ");
+			LOGGER.log(Level.INFO, "Something went wrong { GET /api/user/users/{id} } ");
 			throw new ResourceNotFoundException("Resource not found");
 		} finally {
-			LOGGER.log(Level.INFO, "Operation { GET /api/users/user/{id} } completed ");
+			LOGGER.log(Level.INFO, "Operation { GET /api/user/users/{id} } completed ");
 		}
 
 		return ResponseEntity.ok(response);
@@ -86,25 +85,26 @@ public class UserController {
 	 * 
 	 * @return
 	 */
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@PutMapping(path = "/api/users/user/{id}")
-	public ResponseEntity<Response<UserEntity>> updateUser(@Valid @RequestBody @PathVariable("id") Long id, UserEntity request) {
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@PutMapping(path = "/api/user/users/{id}")
+	public ResponseEntity<Response<UserEntity>> updateUser(@Valid @RequestBody @PathVariable("id") Long id,
+			UserEntity request) {
 		Response<UserEntity> response = new Response<>();
 		UserEntity responseEntity;
-		
+
 		try {
 			responseEntity = service.findById(id).orElse(null);
-			if(responseEntity != null) {
+			if (responseEntity != null) {
 				service.updateUser(request);
 				response = responseUtils.setMessage(response, "Resource updated", true);
 			}
 		} catch (Exception e) {
-			LOGGER.log(Level.INFO, "Something went wrong { PUT /api/users/user/{id} } ");
+			LOGGER.log(Level.INFO, "Something went wrong { PUT /api/user/users/{id} } ");
 			throw new ResourceNotFoundException("Resource not found");
 		} finally {
-			LOGGER.log(Level.INFO, "Operation { PUT /api/users/user/{id} } completed ");
+			LOGGER.log(Level.INFO, "Operation { PUT /api/user/users/{id} } completed ");
 		}
-		
+
 		return ResponseEntity.ok(response);
 	}
 
@@ -112,8 +112,8 @@ public class UserController {
 	 * 
 	 * @return
 	 */
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@DeleteMapping(path = "/api/users/user/{id}")
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@DeleteMapping(path = "/api/user/users/{id}")
 	public ResponseEntity<Response<UserEntity>> removeUser(@Valid @PathVariable("id") Long id) {
 		Response<UserEntity> response = new Response<>();
 
@@ -121,12 +121,46 @@ public class UserController {
 			service.removeUser(id);
 			response = responseUtils.setMessage(response, "Resource deleted", true);
 		} catch (Exception e) {
-			LOGGER.log(Level.INFO, "Something went wrong { DELETE /api/users/user/{id} } ");
+			LOGGER.log(Level.INFO, "Something went wrong { DELETE /api/user/users/{id} } ");
 			throw new ResourceNotFoundException("Resource not found");
 		} finally {
-			LOGGER.log(Level.INFO, "Operation { put /api/users/user/{id} } completed ");
+			LOGGER.log(Level.INFO, "Operation { DELETE /api/user/users/{id} } completed ");
 		}
-		
+
+		return ResponseEntity.ok(response);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@GetMapping(path = "/api/user/information/{id}")
+	public ResponseEntity<Response<UserEntity>> checkRecoverInformation(@Valid @RequestBody @PathVariable("id") Long id,
+			UserEntity request) {
+		Response<UserEntity> response = new Response<>();
+		UserEntity userFromDB;
+
+		try {
+			userFromDB = service.findById(id).orElseThrow();
+			if (userFromDB != null) {
+				if (userFromDB.getAnswer().equals(request.getAnswer())) {
+					response.setData(null);
+					response = responseUtils.setMessage(response, "You are right", true);
+				} else {
+					response.setData(null);
+					response = responseUtils.setMessage(response, "You are wrong", false);
+				}
+			}
+			service.removeUser(id);
+			response = responseUtils.setMessage(response, "Resource deleted", true);
+		} catch (Exception e) {
+			LOGGER.log(Level.INFO, "Something went wrong { GET /api/user/information/{id} } ");
+			throw new ResourceNotFoundException("Resource not found");
+		} finally {
+			LOGGER.log(Level.INFO, "Operation { GET /api/user/information/{id} } completed ");
+		}
+
 		return ResponseEntity.ok(response);
 	}
 
