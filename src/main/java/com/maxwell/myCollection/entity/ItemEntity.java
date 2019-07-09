@@ -15,10 +15,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "items")
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id")
 public class ItemEntity {
 
 	@Id
@@ -30,8 +36,9 @@ public class ItemEntity {
 	private CategoryEntity category;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "user_id_fk", nullable = false)
-	private UserEntity userEntity;
+	@JoinColumn(name = "profile_id_fk", nullable = false)
+	//@JsonBackReference(value = "profile")
+	private ProfileEntity profile;
 
 	@Column(name = "name", nullable = false)
 	private String Name;
@@ -51,11 +58,14 @@ public class ItemEntity {
 	@Column(name = "status", nullable = false)
 	private String status;
 
+	@JsonManagedReference(value = "offers")
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+	@JsonIgnore
 	private Set<OfferEntity> offers = new HashSet<>();
 
-	@JsonManagedReference
+	@JsonManagedReference(value = "commentaries")
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+	@JsonIgnore
 	private Set<CommentaryEntity> commentaries = new HashSet<>();
 
 	public Long getId() {
@@ -122,20 +132,12 @@ public class ItemEntity {
 		this.category = category;
 	}
 
-	public UserEntity getUserEntity() {
-		return userEntity;
+	public ProfileEntity getProfile() {
+		return profile;
 	}
 
-	public void setUserEntity(UserEntity userEntity) {
-		this.userEntity = userEntity;
-	}
-
-	public Set<CommentaryEntity> getCommentaries() {
-		return commentaries;
-	}
-
-	public void setCommentaries(Set<CommentaryEntity> commentaries) {
-		this.commentaries = commentaries;
+	public void setProfile(ProfileEntity profile) {
+		this.profile = profile;
 	}
 
 	public Set<OfferEntity> getOffers() {
@@ -144,6 +146,14 @@ public class ItemEntity {
 
 	public void setOffers(Set<OfferEntity> offers) {
 		this.offers = offers;
+	}
+
+	public Set<CommentaryEntity> getCommentaries() {
+		return commentaries;
+	}
+
+	public void setCommentaries(Set<CommentaryEntity> commentaries) {
+		this.commentaries = commentaries;
 	}
 
 }

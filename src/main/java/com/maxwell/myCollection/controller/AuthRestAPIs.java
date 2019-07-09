@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.maxwell.myCollection.entity.ProfileEntity;
 import com.maxwell.myCollection.entity.RoleEntity;
 import com.maxwell.myCollection.entity.UserEntity;
 import com.maxwell.myCollection.enums.RoleName;
@@ -30,6 +31,8 @@ import com.maxwell.myCollection.request.LoginForm;
 import com.maxwell.myCollection.request.SignUpForm;
 import com.maxwell.myCollection.response.JwtResponse;
 import com.maxwell.myCollection.security.jwt.JwtProvider;
+import com.maxwell.myCollection.service.impl.ProfileServiceImpl;
+import com.maxwell.myCollection.utils.DateUtils;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -43,6 +46,9 @@ public class AuthRestAPIs {
 
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	private ProfileServiceImpl service;
 
 	@Autowired
 	RoleRepository roleRepository;
@@ -97,9 +103,6 @@ public class AuthRestAPIs {
 		UserEntity user = new UserEntity(signUpRequest.getName(), signUpRequest.getUsername(), signUpRequest.getEmail(),
 				encoder.encode(signUpRequest.getPassword()), signUpRequest.getQuestion(), signUpRequest.getAnswer());
 
-		//ProfileEntity profile = new ProfileEntity(signUpRequest.getName(), signUpRequest.getEmail(), 0, "",
-		//		signUpRequest.getLocation(), user);
-
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<RoleEntity> roles = new HashSet<>();
 
@@ -119,8 +122,12 @@ public class AuthRestAPIs {
 		});
 
 		user.setRoles(roles);
-		userRepository.save(user);
-		
+		user = userRepository.save(user);
+
+		ProfileEntity profile = new ProfileEntity(signUpRequest.getName(), signUpRequest.getEmail(), 0,
+				DateUtils.getAtualDate(), signUpRequest.getLocation(), user);
+
+		service.addProfile(profile);
 
 		return ResponseEntity.ok().body("User registered successfully!");
 	}

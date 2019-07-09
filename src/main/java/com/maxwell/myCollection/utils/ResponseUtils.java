@@ -1,6 +1,8 @@
-package com.maxwell.myCollection.response;
+package com.maxwell.myCollection.utils;
 
 import org.springframework.http.ResponseEntity;
+
+import com.maxwell.myCollection.response.Response;
 
 
 public class ResponseUtils {

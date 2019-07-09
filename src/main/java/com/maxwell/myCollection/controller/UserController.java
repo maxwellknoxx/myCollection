@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.maxwell.myCollection.entity.UserEntity;
 import com.maxwell.myCollection.exception.ResourceNotFoundException;
 import com.maxwell.myCollection.response.Response;
-import com.maxwell.myCollection.response.ResponseUtils;
 import com.maxwell.myCollection.service.impl.UserServiceImpl;
+import com.maxwell.myCollection.utils.ResponseUtils;
 
 @RestController
 @ControllerAdvice

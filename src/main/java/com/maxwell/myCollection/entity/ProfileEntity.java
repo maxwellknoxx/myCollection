@@ -1,5 +1,8 @@
 package com.maxwell.myCollection.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,12 +11,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name = "profile")
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id")
 public class ProfileEntity {
 
 	@Id
@@ -40,7 +51,23 @@ public class ProfileEntity {
 
 	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id_fk")
+	@JsonIgnore
 	private UserEntity user;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "profile")
+	@JsonIgnore
+	private Set<OfferEntity> offers = new HashSet<>();
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "profile")
+	@JsonIgnore
+	private Set<CommentaryEntity> commentaries = new HashSet<>();
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "profile")
+	@JsonIgnore
+	private Set<ReplyEntity> replies = new HashSet<>();
+
+	public ProfileEntity() {
+	}
 
 	public ProfileEntity(@NotBlank String name, @NotBlank String email, long numbertrades, String membersince,
 			@NotBlank String location, UserEntity user) {
@@ -107,6 +134,22 @@ public class ProfileEntity {
 
 	public void setUser(UserEntity user) {
 		this.user = user;
+	}
+
+	public Set<OfferEntity> getOffers() {
+		return offers;
+	}
+
+	public void setOffers(Set<OfferEntity> offers) {
+		this.offers = offers;
+	}
+
+	public Set<CommentaryEntity> getCommentaries() {
+		return commentaries;
+	}
+
+	public void setCommentaries(Set<CommentaryEntity> commentaries) {
+		this.commentaries = commentaries;
 	}
 
 }

@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "commentaries")
@@ -33,8 +33,12 @@ public class CommentaryEntity {
 	@JsonBackReference
 	private ItemEntity item;
 
+	@ManyToOne
+	@JoinColumn(name = "profile_id")
+	@JsonIgnore
+	private ProfileEntity profile;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "commentary")
-	@JsonManagedReference
 	private Set<ReplyEntity> replies = new HashSet<>();
 
 	public Long getId() {
@@ -53,6 +57,14 @@ public class CommentaryEntity {
 		this.commentary = commentary;
 	}
 
+	public Set<ReplyEntity> getReplies() {
+		return replies;
+	}
+
+	public void setReplies(Set<ReplyEntity> replies) {
+		this.replies = replies;
+	}
+
 	public ItemEntity getItem() {
 		return item;
 	}
@@ -61,12 +73,12 @@ public class CommentaryEntity {
 		this.item = item;
 	}
 
-	public Set<ReplyEntity> getReplies() {
-		return replies;
+	public ProfileEntity getProfile() {
+		return profile;
 	}
 
-	public void setReplies(Set<ReplyEntity> replies) {
-		this.replies = replies;
+	public void setProfile(ProfileEntity profile) {
+		this.profile = profile;
 	}
 
 }

@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.maxwell.myCollection.entity.CommentaryEntity;
 import com.maxwell.myCollection.exception.ResourceNotFoundException;
 import com.maxwell.myCollection.response.Response;
-import com.maxwell.myCollection.response.ResponseUtils;
 import com.maxwell.myCollection.service.impl.CommentaryServiceImpl;
+import com.maxwell.myCollection.utils.ResponseUtils;
 
 @RestController
 @CrossOrigin("*")
@@ -40,7 +40,7 @@ public class CommentaryController {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping(path = "/api/commentary/commentaries/{id}")
 	public ResponseEntity<Response<CommentaryEntity>> get(@PathVariable("id") Long id)
 			throws ResourceNotFoundException {
@@ -57,7 +57,8 @@ public class CommentaryController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.log(Level.WARNING, "Something went wrong: { GET /api/commentary/commentaries/{id} } " + e.getMessage());
+			LOGGER.log(Level.WARNING,
+					"Something went wrong: { GET /api/commentary/commentaries/{id} } " + e.getMessage());
 			throw new ResourceNotFoundException("Something went wrong getting the commentary ");
 		} finally {
 			LOGGER.log(Level.INFO, "Operation { GET /api/commentary/commentaries/{id} } completed");
@@ -65,14 +66,14 @@ public class CommentaryController {
 
 		return ResponseEntity.ok(response);
 	}
-	
+
 	/**
 	 * 
 	 * @param request
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	////@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	//// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@PostMapping(path = "/api/commentary/commentaries")
 	public ResponseEntity<Response<CommentaryEntity>> insert(@Valid @RequestBody CommentaryEntity request)
 			throws ResourceNotFoundException {
@@ -100,7 +101,7 @@ public class CommentaryController {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@PutMapping(path = "/api/commentary/commentaries/{id}")
 	public ResponseEntity<Response<CommentaryEntity>> update(@Valid @RequestBody @PathVariable("id") Long id,
 			CommentaryEntity request) throws ResourceNotFoundException {
@@ -125,18 +126,19 @@ public class CommentaryController {
 
 		return ResponseEntity.ok(response);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@DeleteMapping(path = "/api/commentary/commentaries/{id}")
-	public ResponseEntity<Response<CommentaryEntity>> delete(@PathVariable("id") Long id) throws ResourceNotFoundException {
+	public ResponseEntity<Response<CommentaryEntity>> delete(@PathVariable("id") Long id)
+			throws ResourceNotFoundException {
 		Response<CommentaryEntity> response = new Response<>();
-		
+
 		try {
 			service.removeCommentary(id);
 			response = responseUtils.setMessage(response, "Commentary deleted", true);
@@ -146,24 +148,24 @@ public class CommentaryController {
 		} finally {
 			LOGGER.log(Level.INFO, "Operation { DELETE /api/commentary/commentaries/{id} } completed");
 		}
-		
+
 		return ResponseEntity.ok(response);
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping(path = "/api/commentary/allcommentaries")
 	public ResponseEntity<Response<CommentaryEntity>> findAll() throws ResourceNotFoundException {
 		Response<CommentaryEntity> response = new Response<>();
 		List<CommentaryEntity> list;
-		
+
 		try {
 			list = service.findAll();
-			if(!list.isEmpty()) {
+			if (!list.isEmpty()) {
 				response.setListData(list);
 				response = responseUtils.setMessage(response, "Resources found", true);
 			} else {
@@ -175,7 +177,7 @@ public class CommentaryController {
 		} finally {
 			LOGGER.log(Level.INFO, "Operation { GET /api/commentary/allcommentaries } completed");
 		}
-		
+
 		return ResponseEntity.ok(response);
 	}
 

@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.maxwell.myCollection.entity.ItemEntity;
 import com.maxwell.myCollection.exception.ResourceNotFoundException;
 import com.maxwell.myCollection.response.Response;
-import com.maxwell.myCollection.response.ResponseUtils;
 import com.maxwell.myCollection.service.impl.ItemServiceImpl;
+import com.maxwell.myCollection.utils.ResponseUtils;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -72,7 +72,7 @@ public class ItemController {
 	 * @throws ResourceNotFoundException
 	 */
 	//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@PostMapping(path = "/api/items/item")
+	@PostMapping(path = "/api/item/items")
 	public ResponseEntity<Response<ItemEntity>> insert(@Valid @RequestBody ItemEntity request)
 			throws ResourceNotFoundException {
 		Response<ItemEntity> response = new Response<>();

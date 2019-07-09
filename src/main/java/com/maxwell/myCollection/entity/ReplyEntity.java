@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "replies")
@@ -24,8 +24,13 @@ public class ReplyEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "commentary_id")
-	@JsonBackReference
+	@JsonIgnore
 	private CommentaryEntity commentary;
+
+	@ManyToOne
+	@JoinColumn(name = "profile_id")
+	@JsonIgnore
+	private ProfileEntity profile;
 
 	public Long getId() {
 		return id;
@@ -49,6 +54,14 @@ public class ReplyEntity {
 
 	public void setCommentary(CommentaryEntity commentary) {
 		this.commentary = commentary;
+	}
+
+	public ProfileEntity getProfile() {
+		return profile;
+	}
+
+	public void setProfile(ProfileEntity profile) {
+		this.profile = profile;
 	}
 
 }

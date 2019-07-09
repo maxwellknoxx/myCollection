@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "offers")
 public class OfferEntity {
@@ -19,11 +21,13 @@ public class OfferEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "item_id")
+	@JsonBackReference
 	private ItemEntity item;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private UserEntity userEntity;
+	@JoinColumn(name = "profile_id")
+	@JsonBackReference
+	private ProfileEntity profile;
 
 	@Column(name = "description", nullable = false)
 	private String description;
@@ -63,12 +67,12 @@ public class OfferEntity {
 		this.item = item;
 	}
 
-	public UserEntity getUserEntity() {
-		return userEntity;
+	public ProfileEntity getProfile() {
+		return profile;
 	}
 
-	public void setUserEntity(UserEntity userEntity) {
-		this.userEntity = userEntity;
+	public void setProfile(ProfileEntity profile) {
+		this.profile = profile;
 	}
 
 }
