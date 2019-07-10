@@ -32,7 +32,7 @@ public class SignUpForm {
 	private String question;
 
 	@NotBlank
-	@Size(min = 6, max = 40)
+	@Size(min = 3, max = 40)
 	private String answer;
 
 	private Long numberTrades;
@@ -40,7 +40,7 @@ public class SignUpForm {
 	private String memberSince;
 
 	@NotBlank
-	@Size(min = 6, max = 40)
+	@Size(min = 3, max = 40)
 	private String location;
 
 	public String getName() {

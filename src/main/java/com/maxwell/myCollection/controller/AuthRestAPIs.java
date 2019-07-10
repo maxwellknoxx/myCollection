@@ -66,7 +66,7 @@ public class AuthRestAPIs {
 	 */
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
-
+		
 		String jwt = "";
 
 		try {
@@ -78,9 +78,12 @@ public class AuthRestAPIs {
 			jwt = jwtProvider.generateJwtToken(authentication);
 		} catch (Exception e) {
 			LOGGER.log(Level.WARNING, "Something went wrong: { POST /signin } ");
+			System.out.println(e.getMessage());
+			return ResponseEntity.badRequest().body(e.getMessage());
 		} finally {
 			LOGGER.log(Level.INFO, "Operation { POST /signin } completed");
 		}
+		
 		return ResponseEntity.ok(new JwtResponse(jwt));
 	}
 
@@ -129,7 +132,7 @@ public class AuthRestAPIs {
 
 		service.addProfile(profile);
 
-		return ResponseEntity.ok().body("User registered successfully!");
+		return ResponseEntity.ok().body("Sucess");
 	}
 
 }

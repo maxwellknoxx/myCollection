@@ -135,7 +135,7 @@ public class UserController {
 	 * @return
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/user/information/{id}")
+	@GetMapping(path = "/api/user/information/{id}")//request nao tras nada
 	public ResponseEntity<Response<UserEntity>> checkRecoverInformation(@Valid @RequestBody @PathVariable("id") Long id,
 			UserEntity request) {
 		Response<UserEntity> response = new Response<>();
@@ -144,7 +144,7 @@ public class UserController {
 		try {
 			userFromDB = service.findById(id).orElseThrow();
 			if (userFromDB != null) {
-				if (userFromDB.getAnswer().equals(request.getAnswer())) {
+				if (userFromDB.getAnswer().toLowerCase().equals(request.getAnswer().toLowerCase()) && userFromDB.getEmail().equals(request.getEmail())) {
 					response.setData(null);
 					response = responseUtils.setMessage(response, "You are right", true);
 				} else {
@@ -152,8 +152,6 @@ public class UserController {
 					response = responseUtils.setMessage(response, "You are wrong", false);
 				}
 			}
-			service.removeUser(id);
-			response = responseUtils.setMessage(response, "Resource deleted", true);
 		} catch (Exception e) {
 			LOGGER.log(Level.INFO, "Something went wrong { GET /api/user/information/{id} } ");
 			throw new ResourceNotFoundException("Resource not found");
