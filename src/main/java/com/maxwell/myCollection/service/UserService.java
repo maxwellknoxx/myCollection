@@ -10,6 +10,8 @@ public interface UserService {
 	List<UserEntity> findAll();
 
 	Optional<UserEntity> findById(Long id);
+	
+	Optional<UserEntity> findByEmail(String email);
 
 	UserEntity updateUser(UserEntity user);
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -86,23 +87,22 @@ public class UserController {
 	 * @return
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@PutMapping(path = "/api/user/users/{id}")
-	public ResponseEntity<Response<UserEntity>> updateUser(@Valid @RequestBody @PathVariable("id") Long id,
-			UserEntity request) {
+	@PutMapping(path = "/api/user/users")
+	public ResponseEntity<Response<UserEntity>> updateUser(@Valid @RequestBody UserEntity request) {
 		Response<UserEntity> response = new Response<>();
-		UserEntity responseEntity;
+		UserEntity entityFromDB;
 
 		try {
-			responseEntity = service.findById(id).orElse(null);
-			if (responseEntity != null) {
+			entityFromDB = service.findById(request.getId()).orElse(null);
+			if (entityFromDB != null) {
 				service.updateUser(request);
 				response = responseUtils.setMessage(response, "Resource updated", true);
 			}
 		} catch (Exception e) {
-			LOGGER.log(Level.INFO, "Something went wrong { PUT /api/user/users/{id} } ");
+			LOGGER.log(Level.INFO, "Something went wrong { PUT /api/user/users } ");
 			throw new ResourceNotFoundException("Resource not found");
 		} finally {
-			LOGGER.log(Level.INFO, "Operation { PUT /api/user/users/{id} } completed ");
+			LOGGER.log(Level.INFO, "Operation { PUT /api/user/users } completed ");
 		}
 
 		return ResponseEntity.ok(response);
@@ -135,16 +135,16 @@ public class UserController {
 	 * @return
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/user/information/{id}")//request nao tras nada
-	public ResponseEntity<Response<UserEntity>> checkRecoverInformation(@Valid @RequestBody @PathVariable("id") Long id,
-			UserEntity request) {
+	@PostMapping(path = "/api/user/information")
+	public ResponseEntity<Response<UserEntity>> checkRecoverInformation(@Valid @RequestBody UserEntity request) {
 		Response<UserEntity> response = new Response<>();
 		UserEntity userFromDB;
 
 		try {
-			userFromDB = service.findById(id).orElseThrow();
+			userFromDB = service.findByEmail(request.getEmail()).orElseThrow();
 			if (userFromDB != null) {
-				if (userFromDB.getAnswer().toLowerCase().equals(request.getAnswer().toLowerCase()) && userFromDB.getEmail().equals(request.getEmail())) {
+				if (userFromDB.getAnswer().toLowerCase().equals(request.getAnswer().toLowerCase())
+						&& userFromDB.getEmail().equals(request.getEmail())) {
 					response.setData(null);
 					response = responseUtils.setMessage(response, "You are right", true);
 				} else {

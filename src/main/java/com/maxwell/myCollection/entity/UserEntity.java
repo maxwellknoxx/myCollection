@@ -16,8 +16,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.NaturalId;
 
@@ -35,8 +33,6 @@ public class UserEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank
-	@Size(min = 3, max = 50)
 	@Column(name = "username", nullable = false)
 	private String username;
 
@@ -50,8 +46,6 @@ public class UserEntity implements Serializable {
 	private String answer;
 
 	@NaturalId
-	@NotBlank
-	@Size(max = 50)
 	@Email
 	@Column(name = "email", nullable = false)
 	private String email;
