@@ -33,6 +33,7 @@ public class UserEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NaturalId
 	@Column(name = "username", nullable = false)
 	private String username;
 

@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,6 +36,9 @@ public class UserController {
 	private final static Logger LOGGER = Logger.getLogger(CategoryController.class.getName());
 
 	ResponseUtils responseUtils = new ResponseUtils();
+
+	@Autowired
+	private PasswordEncoder encoder;
 
 	/**
 	 * 
@@ -93,8 +97,11 @@ public class UserController {
 		UserEntity entityFromDB;
 
 		try {
+			String password = encoder.encode(request.getPassword());
 			entityFromDB = service.findById(request.getId()).orElse(null);
 			if (entityFromDB != null) {
+				request = entityFromDB;
+				request.setPassword(password);
 				service.updateUser(request);
 				response = responseUtils.setMessage(response, "Resource updated", true);
 			}
