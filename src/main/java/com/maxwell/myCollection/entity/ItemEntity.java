@@ -37,7 +37,6 @@ public class ItemEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "profile_id_fk", nullable = false)
-	//@JsonBackReference(value = "profile")
 	private ProfileEntity profile;
 
 	@Column(name = "name", nullable = false)

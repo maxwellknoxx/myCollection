@@ -30,7 +30,7 @@ public class CommentaryEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "item_id")
-	@JsonBackReference
+	@JsonBackReference("item_commentary")
 	private ItemEntity item;
 
 	@ManyToOne

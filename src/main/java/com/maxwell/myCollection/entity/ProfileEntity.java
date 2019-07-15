@@ -14,17 +14,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.maxwell.myCollection.response.JwtResponse;
 
 @Entity
 @Table(name = "profile")
-@JsonIdentityInfo(
-		  generator = ObjectIdGenerators.PropertyGenerator.class, 
-		  property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ProfileEntity {
 
 	@Id
@@ -34,6 +34,9 @@ public class ProfileEntity {
 	@NotBlank
 	@Column(name = "name", nullable = false)
 	private String name;
+
+	@Column(name = "username")
+	private String username;
 
 	@NotBlank
 	@Column(name = "email", nullable = false)
@@ -61,18 +64,22 @@ public class ProfileEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "profile")
 	@JsonIgnore
 	private Set<CommentaryEntity> commentaries = new HashSet<>();
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "profile")
 	@JsonIgnore
 	private Set<ReplyEntity> replies = new HashSet<>();
 
+	@Transient
+	private JwtResponse jwt;
+
 	public ProfileEntity() {
 	}
 
-	public ProfileEntity(@NotBlank String name, @NotBlank String email, long numbertrades, String membersince,
-			@NotBlank String location, UserEntity user) {
+	public ProfileEntity(@NotBlank String name, String username, @NotBlank String email, long numbertrades,
+			String membersince, @NotBlank String location, UserEntity user) {
 		super();
 		this.name = name;
+		this.username = username;
 		this.email = email;
 		this.numbertrades = numbertrades;
 		this.membersince = membersince;
@@ -86,6 +93,14 @@ public class ProfileEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getEmail() {
@@ -150,6 +165,22 @@ public class ProfileEntity {
 
 	public void setCommentaries(Set<CommentaryEntity> commentaries) {
 		this.commentaries = commentaries;
+	}
+
+	public Set<ReplyEntity> getReplies() {
+		return replies;
+	}
+
+	public void setReplies(Set<ReplyEntity> replies) {
+		this.replies = replies;
+	}
+
+	public JwtResponse getJwt() {
+		return jwt;
+	}
+
+	public void setJwt(JwtResponse jwt) {
+		this.jwt = jwt;
 	}
 
 }

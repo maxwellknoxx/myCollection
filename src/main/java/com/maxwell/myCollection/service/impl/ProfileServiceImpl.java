@@ -41,4 +41,9 @@ public class ProfileServiceImpl implements ProfileService {
 		repository.deleteById(id);
 	}
 
+	@Override
+	public Optional<ProfileEntity> findByUsername(String username) {
+		return repository.findByUsername(username);
+	}
+
 }

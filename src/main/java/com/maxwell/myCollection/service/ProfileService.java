@@ -10,6 +10,8 @@ public interface ProfileService {
 	List<ProfileEntity> findAll();
 
 	Optional<ProfileEntity> findById(Long id);
+	
+	Optional<ProfileEntity> findByUsername(String username);
 
 	ProfileEntity addProfile(ProfileEntity profile);
 

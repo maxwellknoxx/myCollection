@@ -30,6 +30,7 @@ import com.maxwell.myCollection.repository.UserRepository;
 import com.maxwell.myCollection.request.LoginForm;
 import com.maxwell.myCollection.request.SignUpForm;
 import com.maxwell.myCollection.response.JwtResponse;
+import com.maxwell.myCollection.response.Response;
 import com.maxwell.myCollection.security.jwt.JwtProvider;
 import com.maxwell.myCollection.service.impl.ProfileServiceImpl;
 import com.maxwell.myCollection.utils.DateUtils;
@@ -65,8 +66,11 @@ public class AuthRestAPIs {
 	 * @return
 	 */
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
-		
+	public ResponseEntity<Response<ProfileEntity>> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
+
+		Response<ProfileEntity> response = new Response<ProfileEntity>();
+		ProfileEntity user = new ProfileEntity();
+
 		String jwt = "";
 
 		try {
@@ -76,15 +80,22 @@ public class AuthRestAPIs {
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			jwt = jwtProvider.generateJwtToken(authentication);
+			
+			user = service.findByUsername(loginRequest.getUsername()).orElse(null);
+			
 		} catch (Exception e) {
 			LOGGER.log(Level.WARNING, "Something went wrong: { POST /signin } ");
 			System.out.println(e.getMessage());
-			return ResponseEntity.badRequest().body(e.getMessage());
+			response.getErrors().add(e.getMessage());
+			return ResponseEntity.badRequest().body(response);
 		} finally {
 			LOGGER.log(Level.INFO, "Operation { POST /signin } completed");
 		}
-		
-		return ResponseEntity.ok(new JwtResponse(jwt));
+
+		user.setJwt(new JwtResponse(jwt));
+		response.setData(user);
+
+		return ResponseEntity.ok(response);
 	}
 
 	/**
@@ -127,7 +138,7 @@ public class AuthRestAPIs {
 		user.setRoles(roles);
 		user = userRepository.save(user);
 
-		ProfileEntity profile = new ProfileEntity(signUpRequest.getName(), signUpRequest.getEmail(), 0,
+		ProfileEntity profile = new ProfileEntity(signUpRequest.getName(), signUpRequest.getUsername(), signUpRequest.getEmail(), 0,
 				DateUtils.getAtualDate(), signUpRequest.getLocation(), user);
 
 		service.addProfile(profile);

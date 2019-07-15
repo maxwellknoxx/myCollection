@@ -21,12 +21,12 @@ public class OfferEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "item_id")
-	@JsonBackReference
+	@JsonBackReference("item")
 	private ItemEntity item;
 
 	@ManyToOne
 	@JoinColumn(name = "profile_id")
-	@JsonBackReference
+	@JsonBackReference("profile")
 	private ProfileEntity profile;
 
 	@Column(name = "description", nullable = false)
