@@ -22,9 +22,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "items")
-@JsonIdentityInfo(
-		  generator = ObjectIdGenerators.PropertyGenerator.class, 
-		  property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ItemEntity {
 
 	@Id
@@ -56,6 +54,9 @@ public class ItemEntity {
 
 	@Column(name = "status", nullable = false)
 	private String status;
+
+	@Column(name = "publish_date", nullable = true)
+	private String publishDate;
 
 	@JsonManagedReference(value = "offers")
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
@@ -153,6 +154,14 @@ public class ItemEntity {
 
 	public void setCommentaries(Set<CommentaryEntity> commentaries) {
 		this.commentaries = commentaries;
+	}
+
+	public String getPublishDate() {
+		return publishDate;
+	}
+
+	public void setPublishDate(String publishDate) {
+		this.publishDate = publishDate;
 	}
 
 }

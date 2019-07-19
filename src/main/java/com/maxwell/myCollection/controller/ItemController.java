@@ -21,6 +21,7 @@ import com.maxwell.myCollection.entity.ItemEntity;
 import com.maxwell.myCollection.exception.ResourceNotFoundException;
 import com.maxwell.myCollection.response.Response;
 import com.maxwell.myCollection.service.impl.ItemServiceImpl;
+import com.maxwell.myCollection.utils.DateUtils;
 import com.maxwell.myCollection.utils.ResponseUtils;
 
 @RestController
@@ -40,7 +41,7 @@ public class ItemController {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	////@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	//// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping(path = "/api/item/items/{id}")
 	public ResponseEntity<Response<ItemEntity>> get(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		Response<ItemEntity> response = new Response<>();
@@ -71,13 +72,14 @@ public class ItemController {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@PostMapping(path = "/api/item/items")
 	public ResponseEntity<Response<ItemEntity>> insert(@Valid @RequestBody ItemEntity request)
 			throws ResourceNotFoundException {
 		Response<ItemEntity> response = new Response<>();
 
 		try {
+			request.setPublishDate(DateUtils.getAtualDate());
 			request = service.addItem(request);
 			response.setData(request);
 			response = responseUtils.setMessage(response, "Item " + request.getName() + " has been added", true);
@@ -99,7 +101,7 @@ public class ItemController {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@PutMapping(path = "/api/item/items/{id}")
 	public ResponseEntity<Response<ItemEntity>> update(@Valid @RequestBody @PathVariable("id") Long id,
 			ItemEntity request) throws ResourceNotFoundException {
@@ -124,18 +126,18 @@ public class ItemController {
 
 		return ResponseEntity.ok(response);
 	}
-	
+
 	/**
 	 * 
 	 * @param id
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@DeleteMapping(path = "/api/item/items/{id}")
 	public ResponseEntity<Response<ItemEntity>> delete(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		Response<ItemEntity> response = new Response<>();
-		
+
 		try {
 			service.removeItem(id);
 			response = responseUtils.setMessage(response, "Item deleted", true);
@@ -146,24 +148,23 @@ public class ItemController {
 			LOGGER.log(Level.INFO, "Operation { DELETE /api/item/items/{id} } completed");
 		}
 
-		
 		return ResponseEntity.ok(response);
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	////@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	//// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping(path = "/api/item/allItems")
 	public ResponseEntity<Response<ItemEntity>> findAll() throws ResourceNotFoundException {
 		Response<ItemEntity> response = new Response<>();
 		List<ItemEntity> list;
-		
+
 		try {
 			list = service.findAll();
-			if(!list.isEmpty()) {
+			if (!list.isEmpty()) {
 				response.setListData(list);
 				response = responseUtils.setMessage(response, "Resources found", true);
 			} else {
@@ -175,7 +176,7 @@ public class ItemController {
 		} finally {
 			LOGGER.log(Level.INFO, "Operation { GET /api/item/allItems } completed");
 		}
-		
+
 		return ResponseEntity.ok(response);
 	}
 

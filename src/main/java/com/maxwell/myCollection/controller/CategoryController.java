@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +42,7 @@ public class CategoryController {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping(path = "/api/category/categories/{id}")
 	public ResponseEntity<Response<CategoryEntity>> getCategory(@PathVariable("id") Long id)
 			throws ResourceNotFoundException {
@@ -68,7 +67,7 @@ public class CategoryController {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@PostMapping(path = "/api/category/categories")
 	public ResponseEntity<Response<CategoryEntity>> addCategory(@Valid @RequestBody CategoryEntity request)
 			throws ResourceNotFoundException {
@@ -96,7 +95,7 @@ public class CategoryController {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@PutMapping(path = "/api/category/categories/{id}")
 	public ResponseEntity<Response<CategoryEntity>> updateCategory(@Valid @RequestBody @PathVariable("id") Long id,
 			CategoryEntity request) throws ResourceNotFoundException {
@@ -129,7 +128,7 @@ public class CategoryController {
 	 * @throws ResourceNotFoundException
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping(path = "/api/category/categories/{id}")
+	//@DeleteMapping(path = "/api/category/categories/{id}")
 	public ResponseEntity<Response<CategoryEntity>> deleteCategory(@PathVariable("id") Long id)
 			throws ResourceNotFoundException {
 		Response<CategoryEntity> response = new Response<>();
