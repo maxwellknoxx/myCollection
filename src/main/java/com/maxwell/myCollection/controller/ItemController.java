@@ -179,5 +179,28 @@ public class ItemController {
 
 		return ResponseEntity.ok(response);
 	}
+	
+	@GetMapping(path = "/api/item/allItemsByCategory/{id}")
+	public ResponseEntity<Response<ItemEntity>> findAllItemsByCategory(@PathVariable("id") Long id) throws ResourceNotFoundException {
+		Response<ItemEntity> response = new Response<>();
+		List<ItemEntity> list;
+
+		try {
+			list = service.findByCategoryId(id);
+			if (!list.isEmpty()) {
+				response.setListData(list);
+				response = responseUtils.setMessage(response, "Resources found", true);
+			} else {
+				response = responseUtils.setMessage(response, "Resources not found", false);
+			}
+		} catch (Exception e) {
+			LOGGER.log(Level.WARNING, "Something went wrong { GET /api/item/allItemsByCategory/{id} } ");
+			throw new ResourceNotFoundException("Something went wrong loading all items");
+		} finally {
+			LOGGER.log(Level.INFO, "Operation { GET /api/item/allItemsByCategory/{id} } completed");
+		}
+
+		return ResponseEntity.ok(response);
+	}
 
 }

@@ -10,6 +10,8 @@ public interface ItemService {
 	List<ItemEntity> findAll();
 
 	Optional<ItemEntity> findById(Long id);
+	
+	List<ItemEntity> findByCategoryId(Long id);
 
 	ItemEntity addItem(ItemEntity item);
 

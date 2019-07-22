@@ -41,4 +41,9 @@ public class ItemServiceImpl implements ItemService {
 		repository.deleteById(id);
 	}
 
+	@Override
+	public List<ItemEntity> findByCategoryId(Long id) {
+		return repository.findByCategoryId(id);
+	}
+
 }
