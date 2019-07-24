@@ -14,5 +14,9 @@ public interface CommentaryRepository extends JpaRepository<CommentaryEntity, Lo
 	List<CommentaryEntity> findAll();
 
 	Optional<CommentaryEntity> findById(Long id);
+	
+	List<CommentaryEntity> findByItemId(Long id);
+	
+	
 
 }

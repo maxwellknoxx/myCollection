@@ -66,6 +66,44 @@ public class CommentaryController {
 
 		return ResponseEntity.ok(response);
 	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 * @throws ResourceNotFoundException
+	 */
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@GetMapping(path = "/api/commentary/commentariesByItem/{id}")
+	public ResponseEntity<Response<CommentaryEntity>> getCommentariesByItem(@PathVariable("id") Long id)
+			throws ResourceNotFoundException {
+		Response<CommentaryEntity> response = new Response<>();
+		List<CommentaryEntity> entityFromDB;
+
+		try {
+			entityFromDB = service.findByItemId(id);
+			if (entityFromDB != null) {
+				response.setListData(entityFromDB);
+				response = responseUtils.setMessage(response, "Resource found", true);
+			} else {
+				throw new ResourceNotFoundException("Commentaries not found");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.log(Level.WARNING,
+					"Something went wrong: { GET /api/commentary/commentariesByItem/{id} } " + e.getMessage());
+			throw new ResourceNotFoundException("Something went wrong getting the commentaries ");
+		} finally {
+			LOGGER.log(Level.INFO, "Operation { GET /api/commentary/commentariesByItem/{id} } completed");
+		}
+		
+		//for(CommentaryEntity c : entityFromDB) {
+		//	System.out.println(c.toString());
+		//}
+		
+
+		return ResponseEntity.ok(response);
+	}
 
 	/**
 	 * 

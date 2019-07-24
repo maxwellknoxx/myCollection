@@ -7,7 +7,7 @@ import java.util.Date;
 public class DateUtils {
 
 	public static String getAtualDate() {
-		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = new Date();
 		return dateFormat.format(date);
 	}

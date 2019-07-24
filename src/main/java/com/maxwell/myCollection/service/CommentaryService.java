@@ -10,6 +10,8 @@ public interface CommentaryService {
 	List<CommentaryEntity> findAll();
 
 	Optional<CommentaryEntity> findById(Long id);
+	
+	List<CommentaryEntity> findByItemId(Long id);
 
 	CommentaryEntity addCommentary(CommentaryEntity commentary);
 

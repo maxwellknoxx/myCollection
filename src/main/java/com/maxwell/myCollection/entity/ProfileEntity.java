@@ -183,4 +183,12 @@ public class ProfileEntity {
 		this.jwt = jwt;
 	}
 
+	@Override
+	public String toString() {
+		return "ProfileEntity [id=" + id + ", name=" + name + ", username=" + username + ", email=" + email
+				+ ", numbertrades=" + numbertrades + ", membersince=" + membersince + ", location=" + location
+				+ ", user=" + user + ", offers=" + offers + ", commentaries=" + commentaries + ", replies=" + replies
+				+ ", jwt=" + jwt + "]";
+	}
+
 }

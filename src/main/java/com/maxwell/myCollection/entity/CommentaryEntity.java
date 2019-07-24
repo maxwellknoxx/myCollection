@@ -15,7 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "commentaries")
@@ -35,7 +34,7 @@ public class CommentaryEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "profile_id")
-	@JsonIgnore
+	// @JsonIgnore
 	private ProfileEntity profile;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "commentary")
@@ -79,6 +78,12 @@ public class CommentaryEntity {
 
 	public void setProfile(ProfileEntity profile) {
 		this.profile = profile;
+	}
+
+	@Override
+	public String toString() {
+		return "CommentaryEntity [id=" + id + ", commentary=" + commentary + ", item=" + item + ", profile=" + profile
+				+ ", replies=" + replies + "]";
 	}
 
 }

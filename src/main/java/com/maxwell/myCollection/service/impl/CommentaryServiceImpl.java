@@ -41,4 +41,9 @@ public class CommentaryServiceImpl implements CommentaryService {
 		repository.deleteById(id);
 	}
 
+	@Override
+	public List<CommentaryEntity> findByItemId(Long id) {
+		return repository.findByItemId(id);
+	}
+
 }

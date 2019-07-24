@@ -64,7 +64,7 @@ public class ItemEntity {
 	private Set<OfferEntity> offers = new HashSet<>();
 
 	@JsonManagedReference(value = "commentaries")
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "item")
 	@JsonIgnore
 	private Set<CommentaryEntity> commentaries = new HashSet<>();
 
@@ -162,6 +162,14 @@ public class ItemEntity {
 
 	public void setPublishDate(String publishDate) {
 		this.publishDate = publishDate;
+	}
+
+	@Override
+	public String toString() {
+		return "ItemEntity [id=" + id + ", category=" + category + ", profile=" + profile + ", Name=" + Name
+				+ ", itemCondition=" + itemCondition + ", description=" + description + ", photo=" + photo + ", Trade="
+				+ Trade + ", status=" + status + ", publishDate=" + publishDate + ", offers=" + offers
+				+ ", commentaries=" + commentaries + "]";
 	}
 
 }

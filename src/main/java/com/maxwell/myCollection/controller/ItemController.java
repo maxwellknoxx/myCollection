@@ -176,6 +176,11 @@ public class ItemController {
 		} finally {
 			LOGGER.log(Level.INFO, "Operation { GET /api/item/allItems } completed");
 		}
+		
+		for(ItemEntity item : list) {
+			System.out.println("Item toString -> " +  item.toString());
+			System.out.println("Profile toString -> " +  item.getProfile().toString());
+		}
 
 		return ResponseEntity.ok(response);
 	}
@@ -198,6 +203,11 @@ public class ItemController {
 			throw new ResourceNotFoundException("Something went wrong loading all items");
 		} finally {
 			LOGGER.log(Level.INFO, "Operation { GET /api/item/allItemsByCategory/{id} } completed");
+		}
+		
+		for(ItemEntity item : list) {
+			System.out.println("Item toString -> " +  item.toString());
+			System.out.println("Profile toString -> " +  item.getProfile().toString());
 		}
 
 		return ResponseEntity.ok(response);
