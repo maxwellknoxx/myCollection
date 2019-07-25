@@ -9,10 +9,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Category {
+public class Reply {
 
 	private Long id;
-	private String name;
-	private String description;
+	private String reply;
+	private Long commentaryId;
+	private Long profileId;
+	private String profileName;
 
 }

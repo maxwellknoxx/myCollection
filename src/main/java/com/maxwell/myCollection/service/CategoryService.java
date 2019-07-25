@@ -1,19 +1,19 @@
 package com.maxwell.myCollection.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.maxwell.myCollection.entity.CategoryEntity;
+import com.maxwell.myCollection.model.Category;
 
 public interface CategoryService {
 
-	List<CategoryEntity> findAll();
+	List<Category> findAll();
 
-	Optional<CategoryEntity> findById(Long id);
+	Category findById(Long id);
 
-	CategoryEntity addCategory(CategoryEntity category);
+	Category addCategory(CategoryEntity category);
 
-	CategoryEntity updateCategory(CategoryEntity category);
+	Category updateCategory(CategoryEntity category);
 
 	void removeCategory(Long id);
 

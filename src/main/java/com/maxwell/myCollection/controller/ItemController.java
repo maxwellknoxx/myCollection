@@ -1,13 +1,13 @@
 package com.maxwell.myCollection.controller;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.maxwell.myCollection.entity.ItemEntity;
 import com.maxwell.myCollection.exception.ResourceNotFoundException;
-import com.maxwell.myCollection.response.Response;
+import com.maxwell.myCollection.model.Item;
 import com.maxwell.myCollection.service.impl.ItemServiceImpl;
+import com.maxwell.myCollection.service.impl.MapValidationErrorService;
 import com.maxwell.myCollection.utils.DateUtils;
-import com.maxwell.myCollection.utils.ResponseUtils;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -31,9 +31,8 @@ public class ItemController {
 	@Autowired
 	private ItemServiceImpl service;
 
-	private final static Logger LOGGER = Logger.getLogger(ItemController.class.getName());
-
-	ResponseUtils responseUtils = new ResponseUtils();
+	@Autowired
+	private MapValidationErrorService mapValidationErrorService;
 
 	/**
 	 * 
@@ -41,29 +40,10 @@ public class ItemController {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	//// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping(path = "/api/item/items/{id}")
-	public ResponseEntity<Response<ItemEntity>> get(@PathVariable("id") Long id) throws ResourceNotFoundException {
-		Response<ItemEntity> response = new Response<>();
-		ItemEntity entityFromDB;
-
-		try {
-			entityFromDB = service.findById(id).orElseThrow();
-			if (entityFromDB != null) {
-				response.setData(entityFromDB);
-				response = responseUtils.setMessage(response, "Resource found", true);
-			} else {
-				throw new ResourceNotFoundException("Item not found");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.log(Level.WARNING, "Something went wrong: { GET /api/item/items/{id} } " + e.getMessage());
-			throw new ResourceNotFoundException("Something went wrong getting the item ");
-		} finally {
-			LOGGER.log(Level.INFO, "Operation { GET /api/items/item } completed");
-		}
-
-		return ResponseEntity.ok(response);
+	public ResponseEntity<?> get(@PathVariable("id") Long id) throws ResourceNotFoundException {
+		return new ResponseEntity<Item>(service.findById(id), HttpStatus.OK);
 	}
 
 	/**
@@ -74,24 +54,17 @@ public class ItemController {
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@PostMapping(path = "/api/item/items")
-	public ResponseEntity<Response<ItemEntity>> insert(@Valid @RequestBody ItemEntity request)
+	public ResponseEntity<?> insert(@Valid @RequestBody ItemEntity request, BindingResult result)
 			throws ResourceNotFoundException {
-		Response<ItemEntity> response = new Response<>();
+		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidation(result);
+		
+		if (errorMap != null)
+			return errorMap;
 
-		try {
-			request.setPublishDate(DateUtils.getAtualDate());
-			request = service.addItem(request);
-			response.setData(request);
-			response = responseUtils.setMessage(response, "Item " + request.getName() + " has been added", true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.log(Level.WARNING, "Something went wrong: { POST /api/items/item } " + e.getMessage());
-			throw new ResourceNotFoundException("Something went wrong adding the item " + request.getName());
-		} finally {
-			LOGGER.log(Level.INFO, "Operation { POST /api/items/item } completed");
-		}
+		request.setPublishDate(DateUtils.getAtualDate());
+		Item item = service.addItem(request);
 
-		return ResponseEntity.ok(response);
+		return new ResponseEntity<Item>(item, HttpStatus.CREATED);
 	}
 
 	/**
@@ -103,28 +76,17 @@ public class ItemController {
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@PutMapping(path = "/api/item/items/{id}")
-	public ResponseEntity<Response<ItemEntity>> update(@Valid @RequestBody @PathVariable("id") Long id,
-			ItemEntity request) throws ResourceNotFoundException {
-		Response<ItemEntity> response = new Response<>();
-		ItemEntity entityFromDB;
+	public ResponseEntity<?> update(@Valid @RequestBody @PathVariable("id") Long id, ItemEntity request)
+			throws ResourceNotFoundException {
+		Item item = service.findById(id);
+		if (item == null) {
+			return new ResponseEntity<String>("Something went wrong", HttpStatus.BAD_REQUEST);
 
-		try {
-			entityFromDB = service.findById(id).orElseThrow();
-			if (entityFromDB != null) {
-				service.updateItem(request);
-				response.setData(request);
-				response = responseUtils.setMessage(response, "Item updated", true);
-			} else {
-				throw new ResourceNotFoundException("Resource not found");
-			}
-		} catch (Exception e) {
-			LOGGER.log(Level.WARNING, "Something went wrong { PUT /api/item/items/{id} } ");
-			throw new ResourceNotFoundException("Something went wrong updating item " + request.getName());
-		} finally {
-			LOGGER.log(Level.INFO, "Operation { PUT /api/item/items/{id} }  completed");
 		}
 
-		return ResponseEntity.ok(response);
+		item = service.updateItem(request);
+
+		return new ResponseEntity<Item>(item, HttpStatus.CREATED);
 	}
 
 	/**
@@ -135,20 +97,10 @@ public class ItemController {
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@DeleteMapping(path = "/api/item/items/{id}")
-	public ResponseEntity<Response<ItemEntity>> delete(@PathVariable("id") Long id) throws ResourceNotFoundException {
-		Response<ItemEntity> response = new Response<>();
+	public ResponseEntity<?> delete(@PathVariable("id") Long id) throws ResourceNotFoundException {
+		service.removeItem(id);
 
-		try {
-			service.removeItem(id);
-			response = responseUtils.setMessage(response, "Item deleted", true);
-		} catch (Exception e) {
-			LOGGER.log(Level.WARNING, "Something went wrong { DELETE /api/item/items/{id} } ");
-			throw new ResourceNotFoundException("Something went wrong deleting item");
-		} finally {
-			LOGGER.log(Level.INFO, "Operation { DELETE /api/item/items/{id} } completed");
-		}
-
-		return ResponseEntity.ok(response);
+		return new ResponseEntity<String>("Item " + id + " has been deleted", HttpStatus.OK);
 	}
 
 	/**
@@ -156,61 +108,35 @@ public class ItemController {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	//// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping(path = "/api/item/allItems")
-	public ResponseEntity<Response<ItemEntity>> findAll() throws ResourceNotFoundException {
-		Response<ItemEntity> response = new Response<>();
-		List<ItemEntity> list;
+	public ResponseEntity<?> findAll() throws ResourceNotFoundException {
+		List<Item> list;
 
-		try {
-			list = service.findAll();
-			if (!list.isEmpty()) {
-				response.setListData(list);
-				response = responseUtils.setMessage(response, "Resources found", true);
-			} else {
-				response = responseUtils.setMessage(response, "Resources not found", false);
-			}
-		} catch (Exception e) {
-			LOGGER.log(Level.WARNING, "Something went wrong { GET /api/item/allItems } ");
-			throw new ResourceNotFoundException("Something went wrong loading all items");
-		} finally {
-			LOGGER.log(Level.INFO, "Operation { GET /api/item/allItems } completed");
+		list = service.findAll();
+		if (list.isEmpty()) {
+			return new ResponseEntity<String>("Something went wrong", HttpStatus.BAD_REQUEST);
 		}
-		
-		for(ItemEntity item : list) {
-			System.out.println("Item toString -> " +  item.toString());
-			System.out.println("Profile toString -> " +  item.getProfile().toString());
-		}
-
-		return ResponseEntity.ok(response);
+		return new ResponseEntity<List<Item>>(list, HttpStatus.OK);
 	}
-	
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 * @throws ResourceNotFoundException
+	 */
+	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping(path = "/api/item/allItemsByCategory/{id}")
-	public ResponseEntity<Response<ItemEntity>> findAllItemsByCategory(@PathVariable("id") Long id) throws ResourceNotFoundException {
-		Response<ItemEntity> response = new Response<>();
-		List<ItemEntity> list;
+	public ResponseEntity<?> findAllItemsByCategory(@PathVariable("id") Long id) throws ResourceNotFoundException {
+		List<Item> list;
 
-		try {
-			list = service.findByCategoryId(id);
-			if (!list.isEmpty()) {
-				response.setListData(list);
-				response = responseUtils.setMessage(response, "Resources found", true);
-			} else {
-				response = responseUtils.setMessage(response, "Resources not found", false);
-			}
-		} catch (Exception e) {
-			LOGGER.log(Level.WARNING, "Something went wrong { GET /api/item/allItemsByCategory/{id} } ");
-			throw new ResourceNotFoundException("Something went wrong loading all items");
-		} finally {
-			LOGGER.log(Level.INFO, "Operation { GET /api/item/allItemsByCategory/{id} } completed");
-		}
-		
-		for(ItemEntity item : list) {
-			System.out.println("Item toString -> " +  item.toString());
-			System.out.println("Profile toString -> " +  item.getProfile().toString());
+		list = service.findByCategoryId(id);
+		if (list.isEmpty()) {
+			return new ResponseEntity<String>("Category Id not found", HttpStatus.BAD_REQUEST);
 		}
 
-		return ResponseEntity.ok(response);
+		return new ResponseEntity<List<Item>>(list, HttpStatus.OK);
 	}
 
 }

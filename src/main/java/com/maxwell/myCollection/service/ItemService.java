@@ -1,21 +1,21 @@
 package com.maxwell.myCollection.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.maxwell.myCollection.entity.ItemEntity;
+import com.maxwell.myCollection.model.Item;
 
 public interface ItemService {
 
-	List<ItemEntity> findAll();
+	List<Item> findAll();
 
-	Optional<ItemEntity> findById(Long id);
+	Item findById(Long id);
 	
-	List<ItemEntity> findByCategoryId(Long id);
+	List<Item> findByCategoryId(Long id);
 
-	ItemEntity addItem(ItemEntity item);
+	Item addItem(ItemEntity item);
 
-	ItemEntity updateItem(ItemEntity item);
+	Item updateItem(ItemEntity item);
 
 	void removeItem(Long id);
 

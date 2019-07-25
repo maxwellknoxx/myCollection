@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class MyCollectionApplication {
+	
+	
 
 	public static void main(String[] args) {
 		SpringApplication.run(MyCollectionApplication.class, args);
@@ -15,7 +17,7 @@ public class MyCollectionApplication {
 	@Bean
 	CommandLineRunner init() {
 		return (args) -> {
-
+				
 		};
 	}
 

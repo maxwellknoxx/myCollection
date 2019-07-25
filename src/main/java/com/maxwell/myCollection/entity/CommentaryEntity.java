@@ -1,7 +1,7 @@
 package com.maxwell.myCollection.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,13 +32,12 @@ public class CommentaryEntity {
 	@JsonBackReference("item_commentary")
 	private ItemEntity item;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "profile_id")
-	// @JsonIgnore
 	private ProfileEntity profile;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "commentary")
-	private Set<ReplyEntity> replies = new HashSet<>();
+	private List<ReplyEntity> replies = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -56,11 +55,11 @@ public class CommentaryEntity {
 		this.commentary = commentary;
 	}
 
-	public Set<ReplyEntity> getReplies() {
+	public List<ReplyEntity> getReplies() {
 		return replies;
 	}
 
-	public void setReplies(Set<ReplyEntity> replies) {
+	public void setReplies(List<ReplyEntity> replies) {
 		this.replies = replies;
 	}
 

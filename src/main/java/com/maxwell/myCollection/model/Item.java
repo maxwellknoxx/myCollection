@@ -1,94 +1,30 @@
 package com.maxwell.myCollection.model;
 
+import java.util.List;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Builder
+@Getter
+@Setter
+@ToString
 public class Item {
 
 	private Long id;
-	private Long idOwner;
-	private String Category;
+	private String categoryName;
+	private Long categoryId;
 	private String Name;
+	private String profileName;
+	private Long profileId;
 	private String itemCondition;
 	private String description;
 	private String photo;
-	private String Trade;
+	private String trade;
 	private String status;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getIdOwner() {
-		return idOwner;
-	}
-
-	public void setIdOwner(Long idOwner) {
-		this.idOwner = idOwner;
-	}
-
-	public String getCategory() {
-		return Category;
-	}
-
-	public void setCategory(String category) {
-		Category = category;
-	}
-
-	public String getName() {
-		return Name;
-	}
-
-	public void setName(String name) {
-		Name = name;
-	}
-
-	public String getItemCondition() {
-		return itemCondition;
-	}
-
-	public void setItemCondition(String itemCondition) {
-		this.itemCondition = itemCondition;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getPhoto() {
-		return photo;
-	}
-
-	public void setPhoto(String photo) {
-		this.photo = photo;
-	}
-
-	public String getTrade() {
-		return Trade;
-	}
-
-	public void setTrade(String trade) {
-		Trade = trade;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	@Override
-	public String toString() {
-		return "Item [id=" + id + ", idOwner=" + idOwner + ", Category=" + Category + ", Name=" + Name + ", itemCondition="
-				+ itemCondition + ", description=" + description + ", photo=" + photo + ", Trade=" + Trade + ", status="
-				+ status + "]";
-	}
+	private String location;
+	private List<Commentary> commentaries;
 
 }

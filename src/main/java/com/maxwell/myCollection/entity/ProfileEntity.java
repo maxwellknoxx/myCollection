@@ -1,7 +1,7 @@
 package com.maxwell.myCollection.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -59,15 +59,15 @@ public class ProfileEntity {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "profile")
 	@JsonIgnore
-	private Set<OfferEntity> offers = new HashSet<>();
+	private List<OfferEntity> offers = new ArrayList<>();
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "profile")
 	@JsonIgnore
-	private Set<CommentaryEntity> commentaries = new HashSet<>();
+	private List<CommentaryEntity> commentaries = new ArrayList<>();
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "profile")
 	@JsonIgnore
-	private Set<ReplyEntity> replies = new HashSet<>();
+	private List<ReplyEntity> replies = new ArrayList<>();
 
 	@Transient
 	private JwtResponse jwt;
@@ -151,27 +151,27 @@ public class ProfileEntity {
 		this.user = user;
 	}
 
-	public Set<OfferEntity> getOffers() {
-		return offers;
-	}
-
-	public void setOffers(Set<OfferEntity> offers) {
-		this.offers = offers;
-	}
-
-	public Set<CommentaryEntity> getCommentaries() {
+	public List<CommentaryEntity> getCommentaries() {
 		return commentaries;
 	}
 
-	public void setCommentaries(Set<CommentaryEntity> commentaries) {
+	public void setCommentaries(List<CommentaryEntity> commentaries) {
 		this.commentaries = commentaries;
 	}
 
-	public Set<ReplyEntity> getReplies() {
+	public List<OfferEntity> getOffers() {
+		return offers;
+	}
+
+	public void setOffers(List<OfferEntity> offers) {
+		this.offers = offers;
+	}
+
+	public List<ReplyEntity> getReplies() {
 		return replies;
 	}
 
-	public void setReplies(Set<ReplyEntity> replies) {
+	public void setReplies(List<ReplyEntity> replies) {
 		this.replies = replies;
 	}
 
