@@ -7,10 +7,10 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,7 +44,12 @@ public class CategoryController {
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping(path = "/api/category/categories/{id}")
 	public ResponseEntity<?> getCategory(@PathVariable("id") Long id) throws ResourceNotFoundException {
-		return new ResponseEntity<Category>(service.findById(id), HttpStatus.OK);
+		Category category = service.findById(id);
+		if (category == null) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<Category>(category, HttpStatus.OK);
 	}
 
 	/**
@@ -59,10 +64,14 @@ public class CategoryController {
 			throws ResourceNotFoundException {
 
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidation(result);
-		if (errorMap != null)
+		if (errorMap != null) {
 			return errorMap;
+		}
 
 		Category category = service.addCategory(request);
+		if (category == null) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		}
 
 		return new ResponseEntity<Category>(category, HttpStatus.CREATED);
 	}
@@ -75,17 +84,14 @@ public class CategoryController {
 	 * @throws ResourceNotFoundException
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@PutMapping(path = "/api/category/categories/{id}")
-	public ResponseEntity<?> updateCategory(@Valid @RequestBody @PathVariable("id") Long id, CategoryEntity request)
+	@PutMapping(path = "/api/category/categories")
+	public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryEntity request)
 			throws ResourceNotFoundException {
 
-		Category category = service.findById(id);
-
+		Category category = service.updateCategory(request);
 		if (category == null) {
-			return new ResponseEntity<String>("Something went wrong", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 		}
-
-		category = service.updateCategory(request);
 
 		return new ResponseEntity<Category>(category, HttpStatus.CREATED);
 	}
@@ -96,12 +102,14 @@ public class CategoryController {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	@PreAuthorize("hasRole('ADMIN')")
-	// @DeleteMapping(path = "/api/category/categories/{id}")
+	//@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping(path = "/api/category/categories/{id}")
 	public ResponseEntity<?> deleteCategory(@PathVariable("id") Long id) throws ResourceNotFoundException {
-		service.removeCategory(id);
-
-		return new ResponseEntity<String>("Category " + id + " has been deleted", HttpStatus.OK);
+		if (service.removeCategory(id)) {
+			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		}
 	}
 
 	/**
@@ -110,11 +118,13 @@ public class CategoryController {
 	 * @throws ResourceNotFoundException
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/category/allCategories")
+	@GetMapping(path = "/api/category/categories")
 	public ResponseEntity<?> findAll() throws ResourceNotFoundException {
-		List<Category> list;
 
-		list = service.findAll();
+		List<Category> list = service.findAll();
+		if (list == null) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		}
 
 		return new ResponseEntity<List<Category>>(list, HttpStatus.OK);
 	}

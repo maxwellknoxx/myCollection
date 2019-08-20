@@ -94,13 +94,7 @@ public class CommentaryController {
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@PutMapping(path = "/api/commentary/commentaries")
 	public ResponseEntity<?> update(@Valid @RequestBody CommentaryEntity request) throws ResourceNotFoundException {
-			//RESOLVER
 		Commentary commentary = service.findById(request.getId());
-		//if (commentary == null) {
-		//	return new ResponseEntity<String>("Commentary does not exist", HttpStatus.BAD_REQUEST);
-		//}
-
-		//commentary = service.updateCommentary(request);
 		
 		System.out.println(commentary.toString());
 

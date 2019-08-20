@@ -1,12 +1,11 @@
 package com.maxwell.myCollection.controller;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,9 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.maxwell.myCollection.entity.UserEntity;
 import com.maxwell.myCollection.exception.ResourceNotFoundException;
-import com.maxwell.myCollection.response.Response;
+import com.maxwell.myCollection.model.UserModel;
 import com.maxwell.myCollection.service.impl.UserServiceImpl;
-import com.maxwell.myCollection.utils.ResponseUtils;
 
 @RestController
 @ControllerAdvice
@@ -33,10 +31,6 @@ public class UserController {
 	@Autowired
 	private UserServiceImpl service;
 
-	private final static Logger LOGGER = Logger.getLogger(CategoryController.class.getName());
-
-	ResponseUtils responseUtils = new ResponseUtils();
-
 	@Autowired
 	private PasswordEncoder encoder;
 
@@ -45,23 +39,16 @@ public class UserController {
 	 * @return
 	 */
 	// @PreAuthorize("hasRole('ADMIN')")
-	@GetMapping(path = "/api/users/allUsers")
-	public ResponseEntity<Response<UserEntity>> findAll() throws ResourceNotFoundException {
-		Response<UserEntity> response = new Response<>();
-		List<UserEntity> list;
+	@GetMapping(path = "/api/v1/users/users")
+	public ResponseEntity<?> findAll() throws ResourceNotFoundException {
+		List<UserModel> list;
 
-		try {
-			list = service.findAll();
-			response.setListData(list);
-			response = responseUtils.setMessage(response, "Resources found", true);
-		} catch (Exception e) {
-			LOGGER.log(Level.INFO, "Something went wrong { GET /api/users/allUsers } ");
-			throw new ResourceNotFoundException("Resource not found");
-		} finally {
-			LOGGER.log(Level.INFO, "Operation { GET /api/users/allUsers } completed ");
+		list = service.findAll();
+		if (list == null) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 		}
 
-		return ResponseEntity.ok(response);
+		return new ResponseEntity<List<UserModel>>(list, HttpStatus.OK);
 	}
 
 	/**
@@ -69,21 +56,15 @@ public class UserController {
 	 * @return
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/user/users/{id}")
-	public ResponseEntity<Response<UserEntity>> getUser(@PathVariable("id") Long id) throws ResourceNotFoundException {
-		Response<UserEntity> response = new Response<>();
+	@GetMapping(path = "/api/v1//user/users/{id}")
+	public ResponseEntity<?> getUser(@PathVariable("id") Long id) throws ResourceNotFoundException {
 
-		try {
-			response.setData(service.findById(id).orElseThrow());
-			response = responseUtils.setMessage(response, "Resource found", true);
-		} catch (Exception e) {
-			LOGGER.log(Level.INFO, "Something went wrong { GET /api/user/users/{id} } ");
-			throw new ResourceNotFoundException("Resource not found");
-		} finally {
-			LOGGER.log(Level.INFO, "Operation { GET /api/user/users/{id} } completed ");
+		UserModel model = service.findById(id);
+		if (model == null) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 		}
 
-		return ResponseEntity.ok(response);
+		return new ResponseEntity<UserModel>(model, HttpStatus.OK);
 	}
 
 	/**
@@ -91,28 +72,23 @@ public class UserController {
 	 * @return
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@PutMapping(path = "/api/user/users")
-	public ResponseEntity<Response<UserEntity>> updateUser(@Valid @RequestBody UserEntity request) {
-		Response<UserEntity> response = new Response<>();
+	@PutMapping(path = "/api/v1/user/users")
+	public ResponseEntity<?> updateUser(@Valid @RequestBody UserEntity request) {
 		UserEntity entityFromDB;
+		UserModel entityFromDBModel = null;
 
-		try {
-			String password = encoder.encode(request.getPassword());
-			entityFromDB = service.findById(request.getId()).orElse(null);
-			if (entityFromDB != null) {
-				request = entityFromDB;
-				request.setPassword(password);
-				service.updateUser(request);
-				response = responseUtils.setMessage(response, "Resource updated", true);
+		String password = encoder.encode(request.getPassword());
+		entityFromDB = service.getUser(request.getId());
+		if (entityFromDB != null) {
+			request = entityFromDB;
+			request.setPassword(password);
+			entityFromDBModel = service.updateUser(request);
+			if (entityFromDBModel == null) {
+				return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 			}
-		} catch (Exception e) {
-			LOGGER.log(Level.INFO, "Something went wrong { PUT /api/user/users } ");
-			throw new ResourceNotFoundException("Resource not found");
-		} finally {
-			LOGGER.log(Level.INFO, "Operation { PUT /api/user/users } completed ");
 		}
 
-		return ResponseEntity.ok(response);
+		return new ResponseEntity<UserModel>(entityFromDBModel, HttpStatus.OK);
 	}
 
 	/**
@@ -120,21 +96,14 @@ public class UserController {
 	 * @return
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@DeleteMapping(path = "/api/user/users/{id}")
-	public ResponseEntity<Response<UserEntity>> removeUser(@Valid @PathVariable("id") Long id) {
-		Response<UserEntity> response = new Response<>();
+	@DeleteMapping(path = "/api/v1/user/users/{id}")
+	public ResponseEntity<?> removeUser(@Valid @PathVariable("id") Long id) {
 
-		try {
-			service.removeUser(id);
-			response = responseUtils.setMessage(response, "Resource deleted", true);
-		} catch (Exception e) {
-			LOGGER.log(Level.INFO, "Something went wrong { DELETE /api/user/users/{id} } ");
-			throw new ResourceNotFoundException("Resource not found");
-		} finally {
-			LOGGER.log(Level.INFO, "Operation { DELETE /api/user/users/{id} } completed ");
+		if (service.removeUser(id)) {
+			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 		}
-
-		return ResponseEntity.ok(response);
 	}
 
 	/**
@@ -143,30 +112,17 @@ public class UserController {
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@PostMapping(path = "/api/user/information")
-	public ResponseEntity<Response<UserEntity>> checkRecoverInformation(@Valid @RequestBody UserEntity request) {
-		Response<UserEntity> response = new Response<>();
+	public ResponseEntity<?> checkRecoverInformation(@Valid @RequestBody UserEntity request) {
 		UserEntity userFromDB;
 
-		try {
-			userFromDB = service.findByEmail(request.getEmail()).orElseThrow();
-			if (userFromDB != null) {
-				if (userFromDB.getAnswer().toLowerCase().equals(request.getAnswer().toLowerCase())
-						&& userFromDB.getEmail().equals(request.getEmail())) {
-					response.setData(null);
-					response = responseUtils.setMessage(response, "You are right", true);
-				} else {
-					response.setData(null);
-					response = responseUtils.setMessage(response, "You are wrong", false);
-				}
+		userFromDB = service.getByEmail(request.getEmail());
+		if (userFromDB != null) {
+			if (userFromDB.getAnswer().toLowerCase().equals(request.getAnswer().toLowerCase())
+					&& userFromDB.getEmail().equals(request.getEmail())) {
+				return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 			}
-		} catch (Exception e) {
-			LOGGER.log(Level.INFO, "Something went wrong { GET /api/user/information/{id} } ");
-			throw new ResourceNotFoundException("Resource not found");
-		} finally {
-			LOGGER.log(Level.INFO, "Operation { GET /api/user/information/{id} } completed ");
 		}
-
-		return ResponseEntity.ok(response);
+		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 	}
 
 }

@@ -41,8 +41,8 @@ public class ItemEntity {
 	private CategoryEntity category;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "profile_id_fk", nullable = false)
-	private ProfileEntity profile;
+	@JoinColumn(name = "user_id_fk", nullable = false)
+	private UserEntity user;
 
 	@Column(name = "name", nullable = false)
 	private String Name;

@@ -14,17 +14,15 @@ public class CommentaryMapper {
 
 	public static Commentary convertEntityToModel(CommentaryEntity entity) {
 		return Commentary.builder().id(entity.getId()).commentary(entity.getCommentary())
-				.profileId(entity.getProfile().getId()).profileName(entity.getProfile().getName())
-				.itemId(entity.getItem().getId()).replies(ReplyMapper.convertEntityToModel(entity.getReplies()))
-				.build();
+				.userId(entity.getUser().getId()).username(entity.getUser().getName()).itemId(entity.getItem().getId())
+				.replies(ReplyMapper.convertEntityToModel(entity.getReplies())).build();
 	}
 
 	public static List<Commentary> convertEntitiesToModel(List<CommentaryEntity> entities) {
 		return entities.stream().filter(Objects::nonNull)
 				.map(entity -> Commentary.builder().id(entity.getId()).commentary(entity.getCommentary())
-						.profileId(entity.getProfile().getId()).profileName(entity.getProfile().getName())
-						.itemId(entity.getItem().getId())
-						.replies(ReplyMapper.convertEntityToModel(entity.getReplies())).build())
+						.itemId(entity.getItem().getId()).replies(ReplyMapper.convertEntityToModel(entity.getReplies()))
+						.build())
 				.collect(Collectors.toList());
 
 	}

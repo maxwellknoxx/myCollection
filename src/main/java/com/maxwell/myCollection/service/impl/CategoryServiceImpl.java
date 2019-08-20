@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.maxwell.myCollection.entity.CategoryEntity;
-import com.maxwell.myCollection.exception.ResourceNotFoundException;
 import com.maxwell.myCollection.model.Category;
 import com.maxwell.myCollection.repository.CategoryRepository;
 import com.maxwell.myCollection.service.CategoryService;
@@ -21,39 +20,48 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public List<Category> findAll() {
-		return CategoryMapper.convertEntitiesToModel(repository.findAll());
+		List<CategoryEntity> list = repository.findAll();
+		if (list == null) {
+			return null;
+		}
+		return CategoryMapper.convertEntitiesToModel(list);
 	}
 
 	@Override
 	public Category findById(Long id) {
-		return CategoryMapper.convertEntityToModel(repository.findById(id).orElseThrow());
+		CategoryEntity entity = repository.findById(id).orElseThrow();
+		if (entity == null) {
+			return null;
+		}
+		return CategoryMapper.convertEntityToModel(entity);
 	}
 
 	@Override
 	public Category addCategory(CategoryEntity category) {
-		try {
-			return CategoryMapper.convertEntityToModel(repository.save(category));
-		} catch (Exception e) {
-			throw new ResourceNotFoundException("Something went wrong " + e.getMessage());
+		CategoryEntity entity = repository.save(category);
+		if (entity == null) {
+			return null;
 		}
+		return CategoryMapper.convertEntityToModel(entity);
 	}
 
 	@Override
 	public Category updateCategory(CategoryEntity category) {
-		try {
-			return CategoryMapper.convertEntityToModel(repository.save(category));
-		} catch (Exception e) {
-			throw new ResourceNotFoundException("Something went wrong " + e.getMessage());
+		CategoryEntity entity = repository.save(category);
+		if (entity == null) {
+			return null;
 		}
+		return CategoryMapper.convertEntityToModel(entity);
 	}
 
 	@Override
-	public void removeCategory(Long id) {
-		Category category = CategoryMapper.convertEntityToModel(repository.findById(id).orElseThrow());
+	public Boolean removeCategory(Long id) {
+		CategoryEntity category = repository.findById(id).orElseThrow();
 		if (Objects.isNull(category)) {
-			throw new ResourceNotFoundException("Category does not exist");
+			return false;
 		}
 		repository.deleteById(id);
+		return true;
 	}
 
 }

@@ -19,6 +19,13 @@ import javax.validation.constraints.Email;
 
 import org.hibernate.annotations.NaturalId;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }),
 		@UniqueConstraint(columnNames = { "email" }) })
@@ -33,6 +40,9 @@ public class UserEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "name", nullable = false)
+	private String name;
+
 	@NaturalId
 	@Column(name = "username", nullable = false)
 	private String username;
@@ -40,86 +50,43 @@ public class UserEntity implements Serializable {
 	@Column(name = "password", nullable = false)
 	private String password;
 
+	@NaturalId
+	@Email
+	@Column(name = "email", nullable = false)
+	private String email;
+
 	@Column(name = "question", nullable = false)
 	private String question;
 
 	@Column(name = "answer", nullable = false)
 	private String answer;
 
-	@NaturalId
-	@Email
-	@Column(name = "email", nullable = false)
-	private String email;
+	@Column(name = "location", nullable = false)
+	private String location;
+
+	@Column(name = "member_since", nullable = false)
+	private String memberSince;
+
+	@Column(name = "number_trades", nullable = false)
+	private Long numberTrades;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<RoleEntity> roles = new HashSet<>();
 
-	public UserEntity() {
-	}
-
-	public UserEntity(String name, String username, String email, String password, String question, String answer) {
+	public UserEntity(String name, String username, String password, String email, String question, String answer,
+			String location, String memberSince, Long numberTrades, Set<RoleEntity> roles) {
+		this.name = name;
 		this.username = username;
-		this.email = email;
 		this.password = password;
+		this.email = email;
 		this.question = question;
 		this.answer = answer;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getQuestion() {
-		return question;
-	}
-
-	public void setQuestion(String question) {
-		this.question = question;
-	}
-
-	public String getAnswer() {
-		return answer;
-	}
-
-	public void setAnswer(String answer) {
-		this.answer = answer;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Set<RoleEntity> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<RoleEntity> roles) {
+		this.location = location;
+		this.memberSince = memberSince;
+		this.numberTrades = numberTrades;
 		this.roles = roles;
+
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.maxwell.myCollection.controller;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,13 +19,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.maxwell.myCollection.entity.ProfileEntity;
 import com.maxwell.myCollection.entity.RoleEntity;
 import com.maxwell.myCollection.entity.UserEntity;
 import com.maxwell.myCollection.enums.RoleName;
+import com.maxwell.myCollection.model.UserModel;
 import com.maxwell.myCollection.repository.RoleRepository;
 import com.maxwell.myCollection.repository.UserRepository;
 import com.maxwell.myCollection.request.LoginForm;
@@ -32,12 +33,11 @@ import com.maxwell.myCollection.request.SignUpForm;
 import com.maxwell.myCollection.response.JwtResponse;
 import com.maxwell.myCollection.response.Response;
 import com.maxwell.myCollection.security.jwt.JwtProvider;
-import com.maxwell.myCollection.service.impl.ProfileServiceImpl;
+import com.maxwell.myCollection.service.impl.UserServiceImpl;
 import com.maxwell.myCollection.utils.DateUtils;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
 public class AuthRestAPIs {
 
 	private final static Logger LOGGER = Logger.getLogger(AuthRestAPIs.class.getName());
@@ -49,7 +49,7 @@ public class AuthRestAPIs {
 	UserRepository userRepository;
 
 	@Autowired
-	private ProfileServiceImpl service;
+	private UserServiceImpl service;
 
 	@Autowired
 	RoleRepository roleRepository;
@@ -65,34 +65,26 @@ public class AuthRestAPIs {
 	 * @param loginRequest
 	 * @return
 	 */
-	@PostMapping("/signin")
-	public ResponseEntity<Response<ProfileEntity>> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
-
-		Response<ProfileEntity> response = new Response<ProfileEntity>();
-		ProfileEntity user = new ProfileEntity();
-
+	@PostMapping(path = "/api/v1/auth/login")
+	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
+		Response<UserModel> response = new Response<UserModel>();
 		String jwt = "";
 
-		try {
-			Authentication authentication = authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+		UserModel user;
 
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-			jwt = jwtProvider.generateJwtToken(authentication);
-			
-			user = service.findByUsername(loginRequest.getUsername()).orElse(null);
-			
-		} catch (Exception e) {
-			LOGGER.log(Level.WARNING, "Something went wrong: { POST /signin } ");
-			System.out.println(e.getMessage());
-			response.getErrors().add(e.getMessage());
-			return ResponseEntity.badRequest().body(response);
-		} finally {
-			LOGGER.log(Level.INFO, "Operation { POST /signin } completed");
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		jwt = jwtProvider.generateJwtToken(authentication);
+
+		user = service.findByUsername(loginRequest.getUsername());
+		if (Objects.isNull(user)) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 		}
 
-		user.setJwt(new JwtResponse(jwt));
+		response.setJwt(new JwtResponse(jwt));
 		response.setData(user);
 
 		return ResponseEntity.ok(response);
@@ -114,8 +106,8 @@ public class AuthRestAPIs {
 		}
 
 		// Creating user's account
-		UserEntity user = new UserEntity(signUpRequest.getName(), signUpRequest.getUsername(), signUpRequest.getEmail(),
-				encoder.encode(signUpRequest.getPassword()), signUpRequest.getQuestion(), signUpRequest.getAnswer());
+		UserEntity user = new UserEntity(String name, String username, String password, String email, String question, String answer,
+				String location, String memberSince, Long numberTrades, Set<RoleEntity> rolesx);
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<RoleEntity> roles = new HashSet<>();
@@ -138,8 +130,8 @@ public class AuthRestAPIs {
 		user.setRoles(roles);
 		user = userRepository.save(user);
 
-		ProfileEntity profile = new ProfileEntity(signUpRequest.getName(), signUpRequest.getUsername(), signUpRequest.getEmail(), 0,
-				DateUtils.getAtualDate(), signUpRequest.getLocation(), user);
+		ProfileEntity profile = new ProfileEntity(signUpRequest.getName(), signUpRequest.getUsername(),
+				signUpRequest.getEmail(), 0, DateUtils.getAtualDate(), signUpRequest.getLocation(), user);
 
 		service.addProfile(profile);
 

@@ -1,20 +1,22 @@
 package com.maxwell.myCollection.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.maxwell.myCollection.entity.UserEntity;
+import com.maxwell.myCollection.model.UserModel;
 
 public interface UserService {
 
-	List<UserEntity> findAll();
+	List<UserModel> findAll();
 
-	Optional<UserEntity> findById(Long id);
+	UserModel findById(Long id);
 	
-	Optional<UserEntity> findByEmail(String email);
+	UserModel findByEmail(String email);
 
-	UserEntity updateUser(UserEntity user);
+	UserModel findByUsername(String username);
+	
+	UserModel updateUser(UserEntity user);
 
-	void removeUser(Long id);
+	Boolean removeUser(Long id);
 
 }

@@ -16,8 +16,8 @@ public class Commentary {
 	private Long id;
 	private String commentary;
 	private Long itemId;
-	private String profileName;
-	private Long profileId;
+	private String username;
+	private Long userId;
 	private List<Reply> replies;
 
 }

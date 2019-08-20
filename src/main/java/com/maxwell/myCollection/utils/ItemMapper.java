@@ -18,8 +18,8 @@ public class ItemMapper {
 		return Item.builder().id(entity.getId()).Name(entity.getName()).description(entity.getDescription())
 				.categoryId(entity.getCategory().getId()).categoryName(entity.getCategory().getName())
 				.itemCondition(entity.getItemCondition()).photo(entity.getPhoto()).status(entity.getStatus())
-				.trade(entity.getTrade()).profileId(entity.getProfile().getId())
-				.profileName(entity.getProfile().getName()).location(entity.getProfile().getLocation())
+				.trade(entity.getTrade()).userId(entity.getUser().getId()).username(entity.getUser().getName())
+				.location(entity.getUser().getLocation())
 				.commentaries(CommentaryMapper.convertEntitiesToModel(entity.getCommentaries())).build();
 	}
 
@@ -29,10 +29,9 @@ public class ItemMapper {
 						.description(entity.getDescription()).categoryId(entity.getCategory().getId())
 						.categoryName(entity.getCategory().getName()).itemCondition(entity.getItemCondition())
 						.photo(entity.getPhoto()).status(entity.getStatus()).trade(entity.getTrade())
-						.profileId(entity.getProfile().getId()).profileName(entity.getProfile().getName())
-						.location(entity.getProfile().getLocation())
-						.commentaries(CommentaryMapper.convertEntitiesToModel(entity.getCommentaries()))
-						.build())
+						.userId(entity.getUser().getId()).username(entity.getUser().getName())
+						.location(entity.getUser().getLocation())
+						.commentaries(CommentaryMapper.convertEntitiesToModel(entity.getCommentaries())).build())
 				.collect(Collectors.toList());
 	}
 

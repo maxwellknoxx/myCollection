@@ -11,6 +11,13 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "replies")
 public class ReplyEntity {
@@ -28,40 +35,8 @@ public class ReplyEntity {
 	private CommentaryEntity commentary;
 
 	@ManyToOne
-	@JoinColumn(name = "profile_id")
+	@JoinColumn(name = "user_id")
 	@JsonIgnore
-	private ProfileEntity profile;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getReply() {
-		return reply;
-	}
-
-	public void setReply(String reply) {
-		this.reply = reply;
-	}
-
-	public CommentaryEntity getCommentary() {
-		return commentary;
-	}
-
-	public void setCommentary(CommentaryEntity commentary) {
-		this.commentary = commentary;
-	}
-
-	public ProfileEntity getProfile() {
-		return profile;
-	}
-
-	public void setProfile(ProfileEntity profile) {
-		this.profile = profile;
-	}
+	private UserEntity profile;
 
 }

@@ -15,6 +15,6 @@ public interface CategoryService {
 
 	Category updateCategory(CategoryEntity category);
 
-	void removeCategory(Long id);
+	Boolean removeCategory(Long id);
 
 }

@@ -17,8 +17,8 @@ public class Item {
 	private String categoryName;
 	private Long categoryId;
 	private String Name;
-	private String profileName;
-	private Long profileId;
+	private String username;
+	private Long userId;
 	private String itemCondition;
 	private String description;
 	private String photo;
