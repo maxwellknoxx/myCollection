@@ -1,20 +1,20 @@
 package com.maxwell.myCollection.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.maxwell.myCollection.entity.ReplyEntity;
+import com.maxwell.myCollection.model.Reply;
 
 public interface ReplyService {
 
-	List<ReplyEntity> findAll();
+	List<Reply> findAll();
 
-	Optional<ReplyEntity> findById(Long id);
+	Reply findById(Long id);
 
-	ReplyEntity addReply(ReplyEntity reply);
+	Reply addReply(ReplyEntity reply);
 
-	ReplyEntity updateReply(ReplyEntity reply);
+	Reply updateReply(ReplyEntity reply);
 
-	void removeReply(Long id);
+	Boolean removeReply(Long id);
 
 }

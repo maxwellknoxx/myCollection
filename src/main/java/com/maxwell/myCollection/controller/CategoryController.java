@@ -42,8 +42,8 @@ public class CategoryController {
 	 * @throws ResourceNotFoundException
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/category/categories/{id}")
-	public ResponseEntity<?> getCategory(@PathVariable("id") Long id) throws ResourceNotFoundException {
+	@GetMapping(path = "/api/v1/category/categories/{id}")
+	public ResponseEntity<?> getCategory(@PathVariable("id") Long id) {
 		Category category = service.findById(id);
 		if (category == null) {
 			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
@@ -59,9 +59,8 @@ public class CategoryController {
 	 * @throws ResourceNotFoundException
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@PostMapping(path = "/api/category/categories")
-	public ResponseEntity<?> addCategory(@Valid @RequestBody CategoryEntity request, BindingResult result)
-			throws ResourceNotFoundException {
+	@PostMapping(path = "/api/v1/category/categories")
+	public ResponseEntity<?> addCategory(@Valid @RequestBody CategoryEntity request, BindingResult result) {
 
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidation(result);
 		if (errorMap != null) {
@@ -84,9 +83,8 @@ public class CategoryController {
 	 * @throws ResourceNotFoundException
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@PutMapping(path = "/api/category/categories")
-	public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryEntity request)
-			throws ResourceNotFoundException {
+	@PutMapping(path = "/api/v1/category/categories")
+	public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryEntity request) {
 
 		Category category = service.updateCategory(request);
 		if (category == null) {
@@ -102,9 +100,9 @@ public class CategoryController {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	//@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping(path = "/api/category/categories/{id}")
-	public ResponseEntity<?> deleteCategory(@PathVariable("id") Long id) throws ResourceNotFoundException {
+	// @PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping(path = "/api/v1/category/categories/{id}")
+	public ResponseEntity<?> deleteCategory(@PathVariable("id") Long id) {
 		if (service.removeCategory(id)) {
 			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		} else {
@@ -118,8 +116,8 @@ public class CategoryController {
 	 * @throws ResourceNotFoundException
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/category/categories")
-	public ResponseEntity<?> findAll() throws ResourceNotFoundException {
+	@GetMapping(path = "/api/v1/category/categories")
+	public ResponseEntity<?> findAll() {
 
 		List<Category> list = service.findAll();
 		if (list == null) {

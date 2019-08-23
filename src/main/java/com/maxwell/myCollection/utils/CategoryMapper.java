@@ -17,7 +17,7 @@ public class CategoryMapper {
 				.build();
 	}
 
-	public static List<Category> convertEntitiesToModel(List<CategoryEntity> entities) {
+	public static List<Category> convertEntityToModelList(List<CategoryEntity> entities) {
 		return entities
 				.stream().filter(Objects::nonNull).map(entity -> Category.builder().id(entity.getId())
 						.name(entity.getName()).description(entity.getDescription()).build())

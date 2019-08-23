@@ -1,13 +1,11 @@
 package com.maxwell.myCollection.service.impl;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.maxwell.myCollection.entity.CommentaryEntity;
-import com.maxwell.myCollection.exception.ResourceNotFoundException;
 import com.maxwell.myCollection.model.Commentary;
 import com.maxwell.myCollection.repository.CommentaryRepository;
 import com.maxwell.myCollection.service.CommentaryService;
@@ -21,48 +19,57 @@ public class CommentaryServiceImpl implements CommentaryService {
 
 	@Override
 	public List<Commentary> findAll() {
-		return CommentaryMapper.convertEntitiesToModel(repository.findAll());
+		List<CommentaryEntity> list = repository.findAll();
+		if (list.isEmpty()) {
+			return null;
+		}
+		return CommentaryMapper.convertEntityToModelList(list);
 	}
 
 	@Override
 	public Commentary findById(Long id) {
-		Commentary commentary = CommentaryMapper.convertEntityToModel(repository.findById(id).orElseThrow());
+		CommentaryEntity commentary = repository.findById(id).orElse(null);
 		if (commentary == null) {
-			throw new ResourceNotFoundException("Commentary does not exist");
+			return null;
 		}
-		return commentary;
+		return CommentaryMapper.convertEntityToModel(commentary);
 	}
 
 	@Override
 	public Commentary addCommentary(CommentaryEntity commentary) {
-		try {
-			return CommentaryMapper.convertEntityToModel(repository.save(commentary));
-		} catch (Exception e) {
-			throw new ResourceNotFoundException("Something went wrong " + e.getMessage());
+		CommentaryEntity entity = repository.save(commentary);
+		if (entity == null) {
+			return null;
 		}
+		return CommentaryMapper.convertEntityToModel(entity);
 	}
 
 	@Override
 	public Commentary updateCommentary(CommentaryEntity commentary) {
-		try {
-			return CommentaryMapper.convertEntityToModel(repository.save(commentary));
-		} catch (Exception e) {
-			throw new ResourceNotFoundException("Something went wrong " + e.getMessage());
+		CommentaryEntity entity = repository.save(commentary);
+		if (entity == null) {
+			return null;
 		}
+		return CommentaryMapper.convertEntityToModel(entity);
 	}
 
 	@Override
-	public void removeCommentary(Long id) {
-		Commentary commentary = CommentaryMapper.convertEntityToModel(repository.findById(id).orElseThrow());
-		if (Objects.isNull(commentary)) {
-			throw new ResourceNotFoundException("Commentary does not exist");
+	public Boolean removeCommentary(Long id) {
+		try {
+			repository.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
-		repository.deleteById(id);
 	}
 
 	@Override
 	public List<Commentary> findByItemId(Long id) {
-		return CommentaryMapper.convertEntitiesToModel(repository.findByItemId(id));
+		List<CommentaryEntity> list = repository.findByItemId(id);
+		if (list.isEmpty()) {
+			return null;
+		}
+		return CommentaryMapper.convertEntityToModelList(list);
 	}
 
 }

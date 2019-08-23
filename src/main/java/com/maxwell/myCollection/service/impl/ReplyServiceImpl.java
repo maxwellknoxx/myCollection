@@ -1,14 +1,15 @@
 package com.maxwell.myCollection.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.maxwell.myCollection.entity.ReplyEntity;
+import com.maxwell.myCollection.model.Reply;
 import com.maxwell.myCollection.repository.ReplyRepository;
 import com.maxwell.myCollection.service.ReplyService;
+import com.maxwell.myCollection.utils.ReplyMapper;
 
 @Service
 public class ReplyServiceImpl implements ReplyService {
@@ -17,28 +18,49 @@ public class ReplyServiceImpl implements ReplyService {
 	private ReplyRepository repository;
 
 	@Override
-	public List<ReplyEntity> findAll() {
-		return repository.findAll();
+	public List<Reply> findAll() {
+		List<ReplyEntity> list = repository.findAll();
+		if (list.isEmpty()) {
+			return null;
+		}
+		return ReplyMapper.convertEntityToModelList(list);
 	}
 
 	@Override
-	public Optional<ReplyEntity> findById(Long id) {
-		return repository.findById(id);
+	public Reply findById(Long id) {
+		ReplyEntity entity = repository.findById(id).orElse(null);
+		if (entity == null) {
+			return null;
+		}
+		return ReplyMapper.convertEntityToModel(entity);
 	}
 
 	@Override
-	public ReplyEntity addReply(ReplyEntity reply) {
-		return repository.save(reply);
+	public Reply addReply(ReplyEntity reply) {
+		ReplyEntity entity = repository.save(reply);
+		if (entity == null) {
+			return null;
+		}
+		return ReplyMapper.convertEntityToModel(entity);
 	}
 
 	@Override
-	public ReplyEntity updateReply(ReplyEntity reply) {
-		return repository.save(reply);
+	public Reply updateReply(ReplyEntity reply) {
+		ReplyEntity entity = repository.save(reply);
+		if (entity == null) {
+			return null;
+		}
+		return ReplyMapper.convertEntityToModel(entity);
 	}
 
 	@Override
-	public void removeReply(Long id) {
-		repository.deleteById(id);
+	public Boolean removeReply(Long id) {
+		try {
+			repository.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }

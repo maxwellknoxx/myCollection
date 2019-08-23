@@ -1,20 +1,20 @@
 package com.maxwell.myCollection.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.maxwell.myCollection.entity.OfferEntity;
+import com.maxwell.myCollection.model.Offer;
 
 public interface OfferService {
 
-	List<OfferEntity> findAll();
+	List<Offer> findAll();
 
-	Optional<OfferEntity> findById(Long id);
+	Offer findById(Long id);
 
-	OfferEntity addOffer(OfferEntity offer);
+	Offer addOffer(OfferEntity offer);
 
-	OfferEntity updateOffer(OfferEntity offer);
+	Offer updateOffer(OfferEntity offer);
 
-	void removeOffer(Long id);
+	Boolean removeOffer(Long id);
 
 }

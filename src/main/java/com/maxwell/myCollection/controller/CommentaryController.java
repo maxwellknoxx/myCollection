@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.maxwell.myCollection.entity.CommentaryEntity;
-import com.maxwell.myCollection.exception.ResourceNotFoundException;
 import com.maxwell.myCollection.model.Commentary;
 import com.maxwell.myCollection.service.impl.CommentaryServiceImpl;
 import com.maxwell.myCollection.service.impl.MapValidationErrorService;
@@ -36,14 +35,16 @@ public class CommentaryController {
 	/**
 	 * 
 	 * @param id
-	 * @return
-	 * @throws ResourceNotFoundException
+	 * @return @
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/commentary/commentaries/{id}")
-	public ResponseEntity<?> get(@PathVariable("id") Long id) throws ResourceNotFoundException {
+	@GetMapping(path = "/api/v1/commentary/commentaries/{id}")
+	public ResponseEntity<?> get(@PathVariable("id") Long id) {
 
 		Commentary commentary = service.findById(id);
+		if (commentary == null) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		}
 
 		return new ResponseEntity<Commentary>(commentary, HttpStatus.OK);
 	}
@@ -51,15 +52,17 @@ public class CommentaryController {
 	/**
 	 * 
 	 * @param id
-	 * @return
-	 * @throws ResourceNotFoundException
+	 * @return @
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/commentary/commentariesByItem/{id}")
-	public ResponseEntity<?> getCommentariesByItem(@PathVariable("id") Long id) throws ResourceNotFoundException {
+	@GetMapping(path = "/api/v1/commentary/commentariesByItem/{id}")
+	public ResponseEntity<?> getCommentariesByItem(@PathVariable("id") Long id) {
 		List<Commentary> list;
 
 		list = service.findByItemId(id);
+		if (list == null) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		}
 
 		return new ResponseEntity<List<Commentary>>(list, HttpStatus.OK);
 	}
@@ -67,19 +70,20 @@ public class CommentaryController {
 	/**
 	 * 
 	 * @param request
-	 * @return
-	 * @throws ResourceNotFoundException
+	 * @return @
 	 */
 	//// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@PostMapping(path = "/api/commentary/commentaries")
-	public ResponseEntity<?> insert(@Valid @RequestBody CommentaryEntity request, BindingResult result)
-			throws ResourceNotFoundException {
+	@PostMapping(path = "/api/v1/commentary/commentaries")
+	public ResponseEntity<?> insert(@Valid @RequestBody CommentaryEntity request, BindingResult result) {
 
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidation(result);
 		if (errorMap != null)
 			return errorMap;
 
 		Commentary commentary = service.addCommentary(request);
+		if (commentary == null) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		}
 
 		return new ResponseEntity<Commentary>(commentary, HttpStatus.CREATED);
 	}
@@ -88,15 +92,15 @@ public class CommentaryController {
 	 * 
 	 * @param id
 	 * @param request
-	 * @return
-	 * @throws ResourceNotFoundException
+	 * @return @
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@PutMapping(path = "/api/commentary/commentaries")
-	public ResponseEntity<?> update(@Valid @RequestBody CommentaryEntity request) throws ResourceNotFoundException {
-		Commentary commentary = service.findById(request.getId());
-		
-		System.out.println(commentary.toString());
+	@PutMapping(path = "/api/v1/commentary/commentaries")
+	public ResponseEntity<?> update(@Valid @RequestBody CommentaryEntity request) {
+		Commentary commentary = service.updateCommentary(request);
+		if (commentary == null) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		}
 
 		return new ResponseEntity<Commentary>(commentary, HttpStatus.CREATED);
 	}
@@ -104,28 +108,31 @@ public class CommentaryController {
 	/**
 	 * 
 	 * @param id
-	 * @return
-	 * @throws ResourceNotFoundException
+	 * @return @
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@DeleteMapping(path = "/api/commentary/commentaries/{id}")
-	public ResponseEntity<?> delete(@PathVariable("id") Long id) throws ResourceNotFoundException {
-		service.removeCommentary(id);
+	@DeleteMapping(path = "/api/v1/commentary/commentaries/{id}")
+	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+		if (service.removeCommentary(id)) {
+			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+		}
 
-		return new ResponseEntity<String>("Commentary has been deleted", HttpStatus.OK);
+		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 	}
 
 	/**
 	 * 
-	 * @return
-	 * @throws ResourceNotFoundException
+	 * @return @
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/commentary/allcommentaries")
-	public ResponseEntity<?> findAll() throws ResourceNotFoundException {
+	@GetMapping(path = "/api/v1/commentary/commentaries")
+	public ResponseEntity<?> findAll() {
 		List<Commentary> list = service.findAll();
+		if (list == null) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		}
 
 		return new ResponseEntity<List<Commentary>>(list, HttpStatus.OK);
 	}
-
+	
 }

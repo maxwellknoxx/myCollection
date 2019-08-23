@@ -24,7 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
 		if (list == null) {
 			return null;
 		}
-		return CategoryMapper.convertEntitiesToModel(list);
+		return CategoryMapper.convertEntityToModelList(list);
 	}
 
 	@Override

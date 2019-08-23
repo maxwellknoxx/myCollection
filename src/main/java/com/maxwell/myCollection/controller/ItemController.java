@@ -41,9 +41,13 @@ public class ItemController {
 	 * @throws ResourceNotFoundException
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/item/items/{id}")
-	public ResponseEntity<?> get(@PathVariable("id") Long id) throws ResourceNotFoundException {
-		return new ResponseEntity<Item>(service.findById(id), HttpStatus.OK);
+	@GetMapping(path = "/api/v1/item/items/{id}")
+	public ResponseEntity<?> get(@PathVariable("id") Long id) {
+		Item item = service.findById(id);
+		if (item == null) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		}
+		return new ResponseEntity<Item>(item, HttpStatus.OK);
 	}
 
 	/**
@@ -54,15 +58,17 @@ public class ItemController {
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@PostMapping(path = "/api/item/items")
-	public ResponseEntity<?> insert(@Valid @RequestBody ItemEntity request, BindingResult result)
-			throws ResourceNotFoundException {
+	public ResponseEntity<?> insert(@Valid @RequestBody ItemEntity request, BindingResult result) {
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidation(result);
-		
+
 		if (errorMap != null)
 			return errorMap;
 
 		request.setPublishDate(DateUtils.getAtualDate());
 		Item item = service.addItem(request);
+		if (item == null) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+		}
 
 		return new ResponseEntity<Item>(item, HttpStatus.CREATED);
 	}
@@ -75,16 +81,12 @@ public class ItemController {
 	 * @throws ResourceNotFoundException
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@PutMapping(path = "/api/item/items/{id}")
-	public ResponseEntity<?> update(@Valid @RequestBody @PathVariable("id") Long id, ItemEntity request)
-			throws ResourceNotFoundException {
-		Item item = service.findById(id);
+	@PutMapping(path = "/api/v1/item/items")
+	public ResponseEntity<?> update(@Valid @RequestBody ItemEntity request) {
+		Item item = service.updateItem(request);
 		if (item == null) {
-			return new ResponseEntity<String>("Something went wrong", HttpStatus.BAD_REQUEST);
-
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 		}
-
-		item = service.updateItem(request);
 
 		return new ResponseEntity<Item>(item, HttpStatus.CREATED);
 	}
@@ -96,11 +98,13 @@ public class ItemController {
 	 * @throws ResourceNotFoundException
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@DeleteMapping(path = "/api/item/items/{id}")
-	public ResponseEntity<?> delete(@PathVariable("id") Long id) throws ResourceNotFoundException {
-		service.removeItem(id);
+	@DeleteMapping(path = "/api/v1/item/items/{id}")
+	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+		if (service.removeItem(id)) {
+			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+		}
 
-		return new ResponseEntity<String>("Item " + id + " has been deleted", HttpStatus.OK);
+		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 	}
 
 	/**
@@ -109,13 +113,11 @@ public class ItemController {
 	 * @throws ResourceNotFoundException
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/item/allItems")
-	public ResponseEntity<?> findAll() throws ResourceNotFoundException {
-		List<Item> list;
-
-		list = service.findAll();
+	@GetMapping(path = "/api/v1/item/items")
+	public ResponseEntity<?> findAll() {
+		List<Item> list = service.findAll();
 		if (list.isEmpty()) {
-			return new ResponseEntity<String>("Something went wrong", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 		}
 		return new ResponseEntity<List<Item>>(list, HttpStatus.OK);
 	}
@@ -127,13 +129,11 @@ public class ItemController {
 	 * @throws ResourceNotFoundException
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/item/allItemsByCategory/{id}")
-	public ResponseEntity<?> findAllItemsByCategory(@PathVariable("id") Long id) throws ResourceNotFoundException {
-		List<Item> list;
-
-		list = service.findByCategoryId(id);
+	@GetMapping(path = "/api/v1/item/itemsByCategory/{id}")
+	public ResponseEntity<?> findAllItemsByCategory(@PathVariable("id") Long id) {
+		List<Item> list = service.findByCategoryId(id);
 		if (list.isEmpty()) {
-			return new ResponseEntity<String>("Category Id not found", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 		}
 
 		return new ResponseEntity<List<Item>>(list, HttpStatus.OK);

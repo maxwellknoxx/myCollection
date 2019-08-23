@@ -17,6 +17,6 @@ public interface CommentaryService {
 
 	Commentary updateCommentary(CommentaryEntity commentary);
 
-	void removeCommentary(Long id);
+	Boolean removeCommentary(Long id);
 
 }

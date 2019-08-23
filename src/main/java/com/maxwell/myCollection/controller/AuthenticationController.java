@@ -3,8 +3,6 @@ package com.maxwell.myCollection.controller;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.maxwell.myCollection.entity.ProfileEntity;
 import com.maxwell.myCollection.entity.RoleEntity;
 import com.maxwell.myCollection.entity.UserEntity;
 import com.maxwell.myCollection.enums.RoleName;
@@ -34,13 +31,10 @@ import com.maxwell.myCollection.response.JwtResponse;
 import com.maxwell.myCollection.response.Response;
 import com.maxwell.myCollection.security.jwt.JwtProvider;
 import com.maxwell.myCollection.service.impl.UserServiceImpl;
-import com.maxwell.myCollection.utils.DateUtils;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-public class AuthRestAPIs {
-
-	private final static Logger LOGGER = Logger.getLogger(AuthRestAPIs.class.getName());
+public class AuthenticationController {
 
 	@Autowired
 	AuthenticationManager authenticationManager;
@@ -95,19 +89,19 @@ public class AuthRestAPIs {
 	 * @param signUpRequest
 	 * @return
 	 */
-	@PostMapping("/signup")
+	@PostMapping("/api/v1/auth/signup")
 	public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-			return new ResponseEntity<String>("Fail -> Username is already taken!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Fail -> Username is already taken!", HttpStatus.OK);
 		}
 
 		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-			return new ResponseEntity<String>("Fail -> Email is already in use!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Fail -> Email is already in use!", HttpStatus.OK);
 		}
 
 		// Creating user's account
-		UserEntity user = new UserEntity(String name, String username, String password, String email, String question, String answer,
-				String location, String memberSince, Long numberTrades, Set<RoleEntity> rolesx);
+		UserEntity user = new UserEntity(signUpRequest.getName(), signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()), signUpRequest.getEmail(), signUpRequest.getQuestion(), signUpRequest.getAnswer(),
+				signUpRequest.getLocation(),signUpRequest.getMemberSince(), 0L);
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<RoleEntity> roles = new HashSet<>();
@@ -129,11 +123,6 @@ public class AuthRestAPIs {
 
 		user.setRoles(roles);
 		user = userRepository.save(user);
-
-		ProfileEntity profile = new ProfileEntity(signUpRequest.getName(), signUpRequest.getUsername(),
-				signUpRequest.getEmail(), 0, DateUtils.getAtualDate(), signUpRequest.getLocation(), user);
-
-		service.addProfile(profile);
 
 		return ResponseEntity.ok().body("Sucess");
 	}

@@ -17,7 +17,7 @@ public class ReplyMapper {
 				.profileId(entity.getProfile().getId()).profileName(entity.getProfile().getName()).build();
 	}
 
-	public static List<Reply> convertEntityToModel(List<ReplyEntity> entities) {
+	public static List<Reply> convertEntityToModelList(List<ReplyEntity> entities) {
 		return entities.stream().filter(Objects::nonNull)
 				.map(entity -> Reply.builder().id(entity.getId()).reply(entity.getReply())
 						.commentaryId(entity.getCommentary().getId()).profileId(entity.getProfile().getId())

@@ -1,13 +1,11 @@
 package com.maxwell.myCollection.service.impl;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.maxwell.myCollection.entity.ItemEntity;
-import com.maxwell.myCollection.exception.ResourceNotFoundException;
 import com.maxwell.myCollection.model.Item;
 import com.maxwell.myCollection.repository.ItemRepository;
 import com.maxwell.myCollection.service.ItemService;
@@ -21,52 +19,58 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<Item> findAll() {
-		return ItemMapper.convertEntitiesToModel(repository.findAll());
+		List<ItemEntity> list = repository.findAll();
+		if (list.isEmpty()) {
+			return null;
+		}
+		return ItemMapper.convertEntityToModelList(list);
 	}
 
 	@Override
 	public Item findById(Long id) {
-
-		Item item = ItemMapper.convertEntityToModel(repository.findById(id).orElseThrow());
+		ItemEntity item = repository.findById(id).orElse(null);
 		if (item == null) {
-			throw new ResourceNotFoundException("Item " + id + " does not exist");
+			return null;
 		}
-		return item;
+		return ItemMapper.convertEntityToModel(item);
 
 	}
 
 	@Override
 	public Item addItem(ItemEntity item) {
-		try {
-			return ItemMapper.convertEntityToModel(repository.save(item));
-		} catch (Exception e) {
-			throw new ResourceNotFoundException("Something went wrong " + e.getMessage());
+		ItemEntity entity = repository.save(item);
+		if (entity == null) {
+			return null;
 		}
-
+		return ItemMapper.convertEntityToModel(entity);
 	}
 
 	@Override
 	public Item updateItem(ItemEntity item) {
-		try {
-			return ItemMapper.convertEntityToModel(repository.save(item));
-		} catch (Exception e) {
-			throw new ResourceNotFoundException("Something went wrong " + e.getMessage());
+		ItemEntity entity = repository.save(item);
+		if (entity == null) {
+			return null;
 		}
+		return ItemMapper.convertEntityToModel(entity);
 	}
 
 	@Override
-	public void removeItem(Long id) {
-		Item item = ItemMapper.convertEntityToModel(repository.findById(id).orElseThrow());
-		if (Objects.isNull(item)) {
-			throw new ResourceNotFoundException("Item " + id + " does not exist");
+	public Boolean removeItem(Long id) {
+		try {
+			repository.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
-
-		repository.deleteById(id);
 	}
 
 	@Override
 	public List<Item> findByCategoryId(Long id) {
-		return ItemMapper.convertEntitiesToModel(repository.findByCategoryId(id));
+		List<ItemEntity> list = repository.findByCategoryId(id);
+		if(list.isEmpty()) {
+			return null;
+		}
+		return ItemMapper.convertEntityToModelList(list);
 	}
 
 }

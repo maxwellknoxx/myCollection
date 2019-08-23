@@ -20,10 +20,10 @@ public class ItemMapper {
 				.itemCondition(entity.getItemCondition()).photo(entity.getPhoto()).status(entity.getStatus())
 				.trade(entity.getTrade()).userId(entity.getUser().getId()).username(entity.getUser().getName())
 				.location(entity.getUser().getLocation())
-				.commentaries(CommentaryMapper.convertEntitiesToModel(entity.getCommentaries())).build();
+				.commentaries(CommentaryMapper.convertEntityToModelList(entity.getCommentaries())).build();
 	}
 
-	public static List<Item> convertEntitiesToModel(@Valid List<ItemEntity> entities) {
+	public static List<Item> convertEntityToModelList(@Valid List<ItemEntity> entities) {
 		return entities.stream().filter(Objects::nonNull)
 				.map(entity -> Item.builder().id(entity.getId()).Name(entity.getName())
 						.description(entity.getDescription()).categoryId(entity.getCategory().getId())
@@ -31,7 +31,7 @@ public class ItemMapper {
 						.photo(entity.getPhoto()).status(entity.getStatus()).trade(entity.getTrade())
 						.userId(entity.getUser().getId()).username(entity.getUser().getName())
 						.location(entity.getUser().getLocation())
-						.commentaries(CommentaryMapper.convertEntitiesToModel(entity.getCommentaries())).build())
+						.commentaries(CommentaryMapper.convertEntityToModelList(entity.getCommentaries())).build())
 				.collect(Collectors.toList());
 	}
 

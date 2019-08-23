@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.maxwell.myCollection.entity.UserEntity;
-import com.maxwell.myCollection.exception.ResourceNotFoundException;
 import com.maxwell.myCollection.model.UserModel;
 import com.maxwell.myCollection.service.impl.UserServiceImpl;
 
@@ -40,7 +39,7 @@ public class UserController {
 	 */
 	// @PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(path = "/api/v1/users/users")
-	public ResponseEntity<?> findAll() throws ResourceNotFoundException {
+	public ResponseEntity<?> findAll()  {
 		List<UserModel> list;
 
 		list = service.findAll();
@@ -57,7 +56,7 @@ public class UserController {
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping(path = "/api/v1//user/users/{id}")
-	public ResponseEntity<?> getUser(@PathVariable("id") Long id) throws ResourceNotFoundException {
+	public ResponseEntity<?> getUser(@PathVariable("id") Long id) {
 
 		UserModel model = service.findById(id);
 		if (model == null) {

@@ -34,7 +34,7 @@ public class OfferEntity {
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	@JsonBackReference("user")
-	private UserEntity profile;
+	private UserEntity user;
 
 	@Column(name = "description", nullable = false)
 	private String description;

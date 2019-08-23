@@ -1,14 +1,15 @@
 package com.maxwell.myCollection.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.maxwell.myCollection.entity.OfferEntity;
+import com.maxwell.myCollection.model.Offer;
 import com.maxwell.myCollection.repository.OfferRepository;
 import com.maxwell.myCollection.service.OfferService;
+import com.maxwell.myCollection.utils.OfferMapper;
 
 @Service
 public class OfferServiceImpl implements OfferService {
@@ -17,28 +18,50 @@ public class OfferServiceImpl implements OfferService {
 	private OfferRepository repository;
 
 	@Override
-	public List<OfferEntity> findAll() {
-		return repository.findAll();
+	public List<Offer> findAll() {
+		List<OfferEntity> list = repository.findAll();
+		if (list.isEmpty()) {
+			return null;
+		}
+		return OfferMapper.convertEntityToModelList(list);
 	}
 
 	@Override
-	public Optional<OfferEntity> findById(Long id) {
-		return repository.findById(id);
+	public Offer findById(Long id) {
+		OfferEntity entity = repository.findById(id).orElse(null);
+		if (entity == null) {
+			return null;
+		}
+		return OfferMapper.converEntityToModel(entity);
+
 	}
 
 	@Override
-	public OfferEntity addOffer(OfferEntity offer) {
-		return repository.save(offer);
+	public Offer addOffer(OfferEntity offer) {
+		OfferEntity entity = repository.save(offer);
+		if (entity == null) {
+			return null;
+		}
+		return OfferMapper.converEntityToModel(entity);
 	}
 
 	@Override
-	public OfferEntity updateOffer(OfferEntity offer) {
-		return repository.save(offer);
+	public Offer updateOffer(OfferEntity offer) {
+		OfferEntity entity = repository.save(offer);
+		if (entity == null) {
+			return null;
+		}
+		return OfferMapper.converEntityToModel(entity);
 	}
 
 	@Override
-	public void removeOffer(Long id) {
-		repository.deleteById(id);
+	public Boolean removeOffer(Long id) {
+		try {
+			repository.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }

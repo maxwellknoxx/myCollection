@@ -73,9 +73,12 @@ public class UserEntity implements Serializable {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<RoleEntity> roles = new HashSet<>();
+	
+	public UserEntity() {
+	}
 
 	public UserEntity(String name, String username, String password, String email, String question, String answer,
-			String location, String memberSince, Long numberTrades, Set<RoleEntity> roles) {
+			String location, String memberSince, Long numberTrades) {
 		this.name = name;
 		this.username = username;
 		this.password = password;
@@ -85,8 +88,6 @@ public class UserEntity implements Serializable {
 		this.location = location;
 		this.memberSince = memberSince;
 		this.numberTrades = numberTrades;
-		this.roles = roles;
-
 	}
 
 }
