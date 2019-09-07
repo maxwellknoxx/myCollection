@@ -55,7 +55,7 @@ public class UserController {
 	 * @return
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@GetMapping(path = "/api/v1//user/users/{id}")
+	@GetMapping(path = "/api/v1/user/users/{id}")
 	public ResponseEntity<?> getUser(@PathVariable("id") Long id) {
 
 		UserModel model = service.findById(id);

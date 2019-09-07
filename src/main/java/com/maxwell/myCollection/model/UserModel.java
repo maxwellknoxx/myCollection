@@ -23,5 +23,6 @@ public class UserModel {
 	private String memberSince;
 	private String location;
 	private Set<RoleEntity> roles;
+	private String role;
 
 }

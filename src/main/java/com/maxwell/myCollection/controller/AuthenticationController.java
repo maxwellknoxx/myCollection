@@ -80,6 +80,7 @@ public class AuthenticationController {
 
 		response.setJwt(new JwtResponse(jwt));
 		response.setData(user);
+		response.setMessage(user.getRole());
 
 		return ResponseEntity.ok(response);
 	}
