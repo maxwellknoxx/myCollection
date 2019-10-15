@@ -1,5 +1,6 @@
 package com.maxwell.myCollection.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -119,6 +120,7 @@ public class ItemController {
 		if (list.isEmpty()) {
 			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 		}
+		System.out.println(list.toString());
 		return new ResponseEntity<List<Item>>(list, HttpStatus.OK);
 	}
 
