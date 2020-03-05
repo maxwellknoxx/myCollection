@@ -2,18 +2,18 @@ package com.maxwell.myCollection.service;
 
 import java.util.List;
 
-import com.maxwell.myCollection.entity.OfferEntity;
-import com.maxwell.myCollection.model.Offer;
+import com.maxwell.myCollection.entity.Offer;
+import com.maxwell.myCollection.model.OfferDTO;
 
 public interface OfferService {
 
-	List<Offer> findAll();
+	List<OfferDTO> findAll();
 
-	Offer findById(Long id);
+	OfferDTO findById(Long id);
 
-	Offer addOffer(OfferEntity offer);
+	OfferDTO addOffer(Offer offer);
 
-	Offer updateOffer(OfferEntity offer);
+	OfferDTO updateOffer(Offer offer);
 
 	Boolean removeOffer(Long id);
 

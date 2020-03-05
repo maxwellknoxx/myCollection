@@ -6,13 +6,13 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.maxwell.myCollection.entity.ReplyEntity;
+import com.maxwell.myCollection.entity.Reply;
 
 @Repository
-public interface ReplyRepository extends JpaRepository<ReplyEntity, Long> {
+public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
-	List<ReplyEntity> findAll();
+	List<Reply> findAll();
 
-	Optional<ReplyEntity> findById(Long id);
+	Optional<Reply> findById(Long id);
 
 }

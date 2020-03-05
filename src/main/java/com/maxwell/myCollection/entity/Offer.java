@@ -1,17 +1,12 @@
 package com.maxwell.myCollection.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -21,29 +16,30 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
 @ToString
+@Setter
 @Entity
-@Table(name = "commentaries")
-public class CommentaryEntity {
+@Table(name = "offers")
+public class Offer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "commentary")
-	private String commentary;
-
 	@ManyToOne
 	@JoinColumn(name = "item_id")
-	@JsonBackReference("item_commentary")
-	private ItemEntity item;
+	@JsonBackReference("item")
+	private Item item;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private UserEntity user;
+	@JsonBackReference("user")
+	private User user;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "commentary")
-	private List<ReplyEntity> replies = new ArrayList<>();
+	@Column(name = "description", nullable = false)
+	private String description;
+
+	@Column(name = "offer_status")
+	private Boolean status;
 
 }

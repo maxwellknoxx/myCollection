@@ -6,25 +6,23 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.maxwell.myCollection.entity.CommentaryEntity;
-import com.maxwell.myCollection.model.Commentary;
+import com.maxwell.myCollection.entity.Commentary;
+import com.maxwell.myCollection.model.CommentaryDTO;
 
 @Component
 public class CommentaryMapper {
 
-	public static Commentary convertEntityToModel(CommentaryEntity entity) {
-		return Commentary.builder().id(entity.getId()).commentary(entity.getCommentary())
+	public static CommentaryDTO getDTO(Commentary entity) {
+		return CommentaryDTO.builder().id(entity.getId()).commentary(entity.getCommentary())
 				.userId(entity.getUser().getId()).username(entity.getUser().getName()).itemId(entity.getItem().getId())
-				.replies(ReplyMapper.convertEntityToModelList(entity.getReplies())).build();
+				.replies(ReplyMapper.getListDTO(entity.getReplies())).build();
 	}
 
-	public static List<Commentary> convertEntityToModelList(List<CommentaryEntity> entities) {
+	public static List<CommentaryDTO> getListDTO(List<Commentary> entities) {
 		return entities.stream().filter(Objects::nonNull)
-				.map(entity -> Commentary.builder().id(entity.getId()).commentary(entity.getCommentary())
-						.itemId(entity.getItem().getId()).replies(ReplyMapper.convertEntityToModelList(entity.getReplies()))
-						.build())
+				.map(entity -> CommentaryDTO.builder().id(entity.getId()).commentary(entity.getCommentary())
+						.itemId(entity.getItem().getId()).replies(ReplyMapper.getListDTO(entity.getReplies())).build())
 				.collect(Collectors.toList());
-
 	}
 
 }

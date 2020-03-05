@@ -1,13 +1,14 @@
 package com.maxwell.myCollection.service.impl;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.maxwell.myCollection.entity.CategoryEntity;
-import com.maxwell.myCollection.model.Category;
+import com.maxwell.myCollection.entity.Category;
+import com.maxwell.myCollection.exception.EntityNotFoundException;
+import com.maxwell.myCollection.exception.ResourceNotFoundException;
+import com.maxwell.myCollection.model.CategoryDTO;
 import com.maxwell.myCollection.repository.CategoryRepository;
 import com.maxwell.myCollection.service.CategoryService;
 import com.maxwell.myCollection.utils.CategoryMapper;
@@ -19,49 +20,47 @@ public class CategoryServiceImpl implements CategoryService {
 	private CategoryRepository repository;
 
 	@Override
-	public List<Category> findAll() {
-		List<CategoryEntity> list = repository.findAll();
-		if (list == null) {
-			return null;
+	public List<CategoryDTO> findAll() throws ResourceNotFoundException {
+		List<Category> list = repository.findAll();
+		if (list.isEmpty()) {
+			throw new ResourceNotFoundException(Category.class, "No categories found");
 		}
-		return CategoryMapper.convertEntityToModelList(list);
+		return CategoryMapper.getListDTO(list);
 	}
 
 	@Override
-	public Category findById(Long id) {
-		CategoryEntity entity = repository.findById(id).orElseThrow();
-		if (entity == null) {
-			return null;
-		}
-		return CategoryMapper.convertEntityToModel(entity);
+	public CategoryDTO findById(Long id) throws EntityNotFoundException {
+		return CategoryMapper.getDTO(repository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(Category.class, "id", id.toString())));
 	}
 
 	@Override
-	public Category addCategory(CategoryEntity category) {
-		CategoryEntity entity = repository.save(category);
+	public CategoryDTO addCategory(Category category) {
+		Category entity = repository.save(category);
 		if (entity == null) {
 			return null;
 		}
-		return CategoryMapper.convertEntityToModel(entity);
+		return CategoryMapper.getDTO(entity);
 	}
 
 	@Override
-	public Category updateCategory(CategoryEntity category) {
-		CategoryEntity entity = repository.save(category);
+	public CategoryDTO updateCategory(Category category) {
+		Category entity = repository.save(category);
 		if (entity == null) {
 			return null;
 		}
-		return CategoryMapper.convertEntityToModel(entity);
+		return CategoryMapper.getDTO(entity);
 	}
 
 	@Override
 	public Boolean removeCategory(Long id) {
-		CategoryEntity category = repository.findById(id).orElseThrow();
-		if (Objects.isNull(category)) {
+		try {
+			findById(id);
+			repository.deleteById(id);
+			return true;
+		} catch (Exception e) {
 			return false;
 		}
-		repository.deleteById(id);
-		return true;
 	}
 
 }

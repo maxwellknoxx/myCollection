@@ -2,20 +2,20 @@ package com.maxwell.myCollection.service;
 
 import java.util.List;
 
-import com.maxwell.myCollection.entity.CommentaryEntity;
-import com.maxwell.myCollection.model.Commentary;
+import com.maxwell.myCollection.entity.Commentary;
+import com.maxwell.myCollection.model.CommentaryDTO;
 
 public interface CommentaryService {
 
-	List<Commentary> findAll();
+	List<CommentaryDTO> findAll();
 
-	Commentary findById(Long id);
+	CommentaryDTO findById(Long id);
 	
-	List<Commentary> findByItemId(Long id);
+	List<CommentaryDTO> findByItemId(Long id);
 
-	Commentary addCommentary(CommentaryEntity commentary);
+	CommentaryDTO addCommentary(Commentary commentary);
 
-	Commentary updateCommentary(CommentaryEntity commentary);
+	CommentaryDTO updateCommentary(Commentary commentary);
 
 	Boolean removeCommentary(Long id);
 

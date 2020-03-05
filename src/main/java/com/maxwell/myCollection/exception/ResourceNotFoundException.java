@@ -1,25 +1,20 @@
 package com.maxwell.myCollection.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.apache.commons.lang3.StringUtils;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends RuntimeException {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6896000226868865769L;
+	private static final long serialVersionUID = -3274693183475519791L;
 
-	public ResourceNotFoundException() {
-		super();
+	public ResourceNotFoundException(Class<?> clazz, String message) {
+		super(ResourceNotFoundException.generateMessage(clazz.getSimpleName(), message));
 	}
 
-	public ResourceNotFoundException(String message) {
-		super(message);
+	private static String generateMessage(String entity, String message) {
+		return StringUtils.capitalize(entity + " " + message);
 	}
 
-	public ResourceNotFoundException(String message, Throwable cause) {
-		super(message, cause);
-	}
 }

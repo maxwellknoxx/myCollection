@@ -2,20 +2,20 @@ package com.maxwell.myCollection.service;
 
 import java.util.List;
 
-import com.maxwell.myCollection.entity.ItemEntity;
-import com.maxwell.myCollection.model.Item;
+import com.maxwell.myCollection.entity.Item;
+import com.maxwell.myCollection.model.ItemDTO;
 
 public interface ItemService {
 
-	List<Item> findAll();
+	List<ItemDTO> findAll();
 
-	Item findById(Long id);
+	ItemDTO findById(Long id);
 	
-	List<Item> findByCategoryId(Long id);
+	List<ItemDTO> findByCategoryId(Long id);
 
-	Item addItem(ItemEntity item);
+	ItemDTO addItem(Item item);
 
-	Item updateItem(ItemEntity item);
+	ItemDTO updateItem(Item item);
 
 	Boolean removeItem(Long id);
 

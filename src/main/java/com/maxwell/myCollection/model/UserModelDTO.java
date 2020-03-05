@@ -2,7 +2,7 @@ package com.maxwell.myCollection.model;
 
 import java.util.Set;
 
-import com.maxwell.myCollection.entity.RoleEntity;
+import com.maxwell.myCollection.entity.Role;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class UserModel {
+public class UserModelDTO {
 
 	private Long id;
 	private String name;
@@ -22,7 +22,7 @@ public class UserModel {
 	private String email;
 	private String memberSince;
 	private String location;
-	private Set<RoleEntity> roles;
+	private Set<Role> roles;
 	private String role;
 
 }

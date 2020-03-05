@@ -20,7 +20,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "replies")
-public class ReplyEntity {
+public class Reply {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,11 +32,11 @@ public class ReplyEntity {
 	@ManyToOne
 	@JoinColumn(name = "commentary_id")
 	@JsonIgnore
-	private CommentaryEntity commentary;
+	private Commentary commentary;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	@JsonIgnore
-	private UserEntity profile;
+	private User profile;
 
 }

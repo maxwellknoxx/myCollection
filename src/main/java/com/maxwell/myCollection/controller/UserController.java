@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.maxwell.myCollection.entity.UserEntity;
-import com.maxwell.myCollection.model.UserModel;
+import com.maxwell.myCollection.entity.User;
+import com.maxwell.myCollection.model.UserModelDTO;
 import com.maxwell.myCollection.service.impl.UserServiceImpl;
 
 @RestController
@@ -38,16 +38,9 @@ public class UserController {
 	 * @return
 	 */
 	// @PreAuthorize("hasRole('ADMIN')")
-	@GetMapping(path = "/api/v1/users/users")
-	public ResponseEntity<?> findAll()  {
-		List<UserModel> list;
-
-		list = service.findAll();
-		if (list == null) {
-			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
-		}
-
-		return new ResponseEntity<List<UserModel>>(list, HttpStatus.OK);
+	@GetMapping(path = "/api/v1/user/users")
+	public ResponseEntity<?> findAll() {
+		return new ResponseEntity<List<UserModelDTO>>(service.findAll(), HttpStatus.OK);
 	}
 
 	/**
@@ -57,13 +50,7 @@ public class UserController {
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping(path = "/api/v1/user/users/{id}")
 	public ResponseEntity<?> getUser(@PathVariable("id") Long id) {
-
-		UserModel model = service.findById(id);
-		if (model == null) {
-			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
-		}
-
-		return new ResponseEntity<UserModel>(model, HttpStatus.OK);
+		return new ResponseEntity<UserModelDTO>(service.findById(id), HttpStatus.OK);
 	}
 
 	/**
@@ -72,9 +59,9 @@ public class UserController {
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@PutMapping(path = "/api/v1/user/users")
-	public ResponseEntity<?> updateUser(@Valid @RequestBody UserEntity request) {
-		UserEntity entityFromDB;
-		UserModel entityFromDBModel = null;
+	public ResponseEntity<?> updateUser(@Valid @RequestBody User request) {
+		User entityFromDB;
+		UserModelDTO entityFromDBModel = null;
 
 		String password = encoder.encode(request.getPassword());
 		entityFromDB = service.getUser(request.getId());
@@ -87,7 +74,7 @@ public class UserController {
 			}
 		}
 
-		return new ResponseEntity<UserModel>(entityFromDBModel, HttpStatus.OK);
+		return new ResponseEntity<UserModelDTO>(entityFromDBModel, HttpStatus.OK);
 	}
 
 	/**
@@ -97,12 +84,7 @@ public class UserController {
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@DeleteMapping(path = "/api/v1/user/users/{id}")
 	public ResponseEntity<?> removeUser(@Valid @PathVariable("id") Long id) {
-
-		if (service.removeUser(id)) {
-			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
-		}
+		return new ResponseEntity<Boolean>(service.removeUser(id), HttpStatus.OK);
 	}
 
 	/**
@@ -110,9 +92,9 @@ public class UserController {
 	 * @return
 	 */
 	// @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@PostMapping(path = "/api/user/information")
-	public ResponseEntity<?> checkRecoverInformation(@Valid @RequestBody UserEntity request) {
-		UserEntity userFromDB;
+	@PostMapping(path = "/api/v1/user/information")
+	public ResponseEntity<?> checkRecoverInformation(@Valid @RequestBody User request) {
+		User userFromDB;
 
 		userFromDB = service.getByEmail(request.getEmail());
 		if (userFromDB != null) {

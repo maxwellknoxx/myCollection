@@ -2,18 +2,18 @@ package com.maxwell.myCollection.service;
 
 import java.util.List;
 
-import com.maxwell.myCollection.entity.ReplyEntity;
-import com.maxwell.myCollection.model.Reply;
+import com.maxwell.myCollection.entity.Reply;
+import com.maxwell.myCollection.model.ReplyDTO;
 
 public interface ReplyService {
 
-	List<Reply> findAll();
+	List<ReplyDTO> findAll();
 
-	Reply findById(Long id);
+	ReplyDTO findById(Long id);
 
-	Reply addReply(ReplyEntity reply);
+	ReplyDTO addReply(Reply reply);
 
-	Reply updateReply(ReplyEntity reply);
+	ReplyDTO updateReply(Reply reply);
 
 	Boolean removeReply(Long id);
 

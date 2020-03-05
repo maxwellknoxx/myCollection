@@ -30,7 +30,7 @@ import lombok.ToString;
 @Entity
 @Table(name = "items")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class ItemEntity {
+public class Item {
 
 	@Id
 	@GeneratedValue
@@ -38,11 +38,11 @@ public class ItemEntity {
 
 	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinColumn(name = "category_id_fk")
-	private CategoryEntity category;
+	private Category category;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "user_id_fk", nullable = false)
-	private UserEntity user;
+	private User user;
 
 	@Column(name = "name", nullable = false)
 	private String Name;
@@ -68,9 +68,9 @@ public class ItemEntity {
 	@JsonManagedReference(value = "offers")
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
 	@JsonIgnore
-	private List<OfferEntity> offers = new ArrayList<>();
+	private List<Offer> offers = new ArrayList<>();
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "item")
-	private List<CommentaryEntity> commentaries = new ArrayList<>();
+	private List<Commentary> commentaries = new ArrayList<>();
 
 }

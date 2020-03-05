@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.maxwell.myCollection.entity.ItemEntity;
-import com.maxwell.myCollection.model.Item;
+import com.maxwell.myCollection.entity.Item;
+import com.maxwell.myCollection.exception.EntityNotFoundException;
+import com.maxwell.myCollection.exception.ResourceNotFoundException;
+import com.maxwell.myCollection.model.ItemDTO;
 import com.maxwell.myCollection.repository.ItemRepository;
 import com.maxwell.myCollection.service.ItemService;
 import com.maxwell.myCollection.utils.ItemMapper;
@@ -18,40 +20,36 @@ public class ItemServiceImpl implements ItemService {
 	private ItemRepository repository;
 
 	@Override
-	public List<Item> findAll() {
-		List<ItemEntity> list = repository.findAll();
+	public List<ItemDTO> findAll() throws ResourceNotFoundException {
+		List<Item> list = repository.findAll();
 		if (list.isEmpty()) {
-			return null;
+			throw new ResourceNotFoundException(Item.class, "No item found");
 		}
-		return ItemMapper.convertEntityToModelList(list);
+		return ItemMapper.getListDTO(list);
 	}
 
 	@Override
-	public Item findById(Long id) {
-		ItemEntity item = repository.findById(id).orElse(null);
-		if (item == null) {
-			return null;
-		}
-		return ItemMapper.convertEntityToModel(item);
-
+	public ItemDTO findById(Long id) {
+		return ItemMapper.getDTO(repository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(Item.class, "id", id.toString())));
 	}
 
 	@Override
-	public Item addItem(ItemEntity item) {
-		ItemEntity entity = repository.save(item);
+	public ItemDTO addItem(Item item) {
+		Item entity = repository.save(item);
 		if (entity == null) {
 			return null;
 		}
-		return ItemMapper.convertEntityToModel(entity);
+		return ItemMapper.getDTO(entity);
 	}
 
 	@Override
-	public Item updateItem(ItemEntity item) {
-		ItemEntity entity = repository.save(item);
+	public ItemDTO updateItem(Item item) {
+		Item entity = repository.save(item);
 		if (entity == null) {
 			return null;
 		}
-		return ItemMapper.convertEntityToModel(entity);
+		return ItemMapper.getDTO(entity);
 	}
 
 	@Override
@@ -65,12 +63,12 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Item> findByCategoryId(Long id) {
-		List<ItemEntity> list = repository.findByCategoryId(id);
-		if(list.isEmpty()) {
-			return null;
+	public List<ItemDTO> findByCategoryId(Long id)  throws ResourceNotFoundException {
+		List<Item> list = repository.findByCategoryId(id);
+		if (list.isEmpty()) {
+			throw new ResourceNotFoundException(Item.class, "No item found");
 		}
-		return ItemMapper.convertEntityToModelList(list);
+		return ItemMapper.getListDTO(list);
 	}
 
 }

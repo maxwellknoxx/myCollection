@@ -7,15 +7,15 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.maxwell.myCollection.entity.RoleEntity;
-import com.maxwell.myCollection.entity.UserEntity;
-import com.maxwell.myCollection.model.UserModel;
+import com.maxwell.myCollection.entity.Role;
+import com.maxwell.myCollection.entity.User;
+import com.maxwell.myCollection.model.UserModelDTO;
 
 @Component
 public class UserMapper {
 
-	public static UserModel entityToModel(UserEntity entity) {
-		return UserModel.builder().id(entity.getId()).name(entity.getName()).user(entity.getUsername())
+	public static UserModelDTO getDTO(User entity) {
+		return UserModelDTO.builder().id(entity.getId()).name(entity.getName()).user(entity.getUsername())
 				.email(entity.getEmail()).memberSince(entity.getMemberSince()).location(entity.getLocation())
 				.roles(entity.getRoles())
 				.role(getRole(entity.getRoles()))
@@ -23,9 +23,9 @@ public class UserMapper {
 				.build();
 	}
 
-	public static List<UserModel> entityToModelList(List<UserEntity> entities) {
+	public static List<UserModelDTO> getListDTO(List<User> entities) {
 		return entities.stream().filter(Objects::nonNull)
-				.map(entity -> UserModel.builder().id(entity.getId()).name(entity.getName()).user(entity.getUsername())
+				.map(entity -> UserModelDTO.builder().id(entity.getId()).name(entity.getName()).user(entity.getUsername())
 						.email(entity.getEmail()).memberSince(entity.getMemberSince()).location(entity.getLocation())
 						.roles(entity.getRoles())
 						.role(getRole(entity.getRoles()))
@@ -33,8 +33,8 @@ public class UserMapper {
 				.collect(Collectors.toList());
 	}
 
-	public static String getRole(Set<RoleEntity> roles) {
-		for (RoleEntity role : roles) {
+	public static String getRole(Set<Role> roles) {
+		for (Role role : roles) {
 			return role.getName().toString();
 		}
 		return "";

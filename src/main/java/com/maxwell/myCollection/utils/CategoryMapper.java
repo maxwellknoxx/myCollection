@@ -6,20 +6,20 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.maxwell.myCollection.entity.CategoryEntity;
-import com.maxwell.myCollection.model.Category;
+import com.maxwell.myCollection.entity.Category;
+import com.maxwell.myCollection.model.CategoryDTO;
 
 @Component
 public class CategoryMapper {
 
-	public static Category convertEntityToModel(CategoryEntity entity) {
-		return Category.builder().id(entity.getId()).name(entity.getName()).description(entity.getDescription())
+	public static CategoryDTO getDTO(Category entity) {
+		return CategoryDTO.builder().id(entity.getId()).name(entity.getName()).description(entity.getDescription())
 				.build();
 	}
 
-	public static List<Category> convertEntityToModelList(List<CategoryEntity> entities) {
+	public static List<CategoryDTO> getListDTO(List<Category> entities) {
 		return entities
-				.stream().filter(Objects::nonNull).map(entity -> Category.builder().id(entity.getId())
+				.stream().filter(Objects::nonNull).map(entity -> CategoryDTO.builder().id(entity.getId())
 						.name(entity.getName()).description(entity.getDescription()).build())
 				.collect(Collectors.toList());
 	}

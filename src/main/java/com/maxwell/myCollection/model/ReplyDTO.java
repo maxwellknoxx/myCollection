@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Reply {
+public class ReplyDTO {
 
 	private Long id;
 	private String reply;

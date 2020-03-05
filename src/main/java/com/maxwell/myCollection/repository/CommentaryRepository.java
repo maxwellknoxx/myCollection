@@ -6,16 +6,16 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.maxwell.myCollection.entity.CommentaryEntity;
+import com.maxwell.myCollection.entity.Commentary;
 
 @Repository
-public interface CommentaryRepository extends JpaRepository<CommentaryEntity, Long> {
+public interface CommentaryRepository extends JpaRepository<Commentary, Long> {
 
-	List<CommentaryEntity> findAll();
+	List<Commentary> findAll();
 
-	Optional<CommentaryEntity> findById(Long id);
+	Optional<Commentary> findById(Long id);
 	
-	List<CommentaryEntity> findByItemId(Long id);
+	List<Commentary> findByItemId(Long id);
 	
 	
 

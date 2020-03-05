@@ -29,7 +29,7 @@ import lombok.ToString;
 @Entity
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }),
 		@UniqueConstraint(columnNames = { "email" }) })
-public class UserEntity implements Serializable {
+public class User implements Serializable {
 
 	/**
 	 * 
@@ -72,12 +72,12 @@ public class UserEntity implements Serializable {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<RoleEntity> roles = new HashSet<>();
+	private Set<Role> roles = new HashSet<>();
 	
-	public UserEntity() {
+	public User() {
 	}
 
-	public UserEntity(String name, String username, String password, String email, String question, String answer,
+	public User(String name, String username, String password, String email, String question, String answer,
 			String location, String memberSince, Long numberTrades) {
 		this.name = name;
 		this.username = username;

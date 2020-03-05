@@ -10,7 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.maxwell.myCollection.entity.UserEntity;
+import com.maxwell.myCollection.entity.User;
 
 public class UserPrinciple implements UserDetails {
 
@@ -39,7 +39,7 @@ public class UserPrinciple implements UserDetails {
 		this.authorities = authorities;
 	}
 
-	public static UserPrinciple build(UserEntity user) {
+	public static UserPrinciple build(User user) {
 		List<GrantedAuthority> authorities = user.getRoles().stream()
 				.map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
 

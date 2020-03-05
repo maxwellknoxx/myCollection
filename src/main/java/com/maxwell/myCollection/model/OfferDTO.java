@@ -5,14 +5,19 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Builder
 @Getter
 @Setter
 @ToString
-public class Category {
+@Builder
+public class OfferDTO {
 
+	
 	private Long id;
-	private String name;
+	private Long itemId;
+	private String itemName;
+	private Long userId;
+	private String username;
 	private String description;
-
+	private Boolean status;
+	
 }

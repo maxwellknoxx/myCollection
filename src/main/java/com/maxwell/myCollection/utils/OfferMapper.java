@@ -6,14 +6,14 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.maxwell.myCollection.entity.OfferEntity;
-import com.maxwell.myCollection.model.Offer;
+import com.maxwell.myCollection.entity.Offer;
+import com.maxwell.myCollection.model.OfferDTO;
 
 @Component
 public class OfferMapper {
 	
-	public static Offer converEntityToModel(OfferEntity entity) {
-		return Offer.builder()
+	public static OfferDTO getDTO(Offer entity) {
+		return OfferDTO.builder()
 				.id(entity.getId())
 				.itemId(entity.getItem().getId())
 				.itemName(entity.getItem().getName())
@@ -24,9 +24,9 @@ public class OfferMapper {
 				.build();
 	}
 	
-	public static List<Offer> convertEntityToModelList(List<OfferEntity> entities) {
+	public static List<OfferDTO> getListDTO(List<Offer> entities) {
 		return entities.stream().filter(Objects::nonNull)
-				.map(entity -> Offer.builder()
+				.map(entity -> OfferDTO.builder()
 				.id(entity.getId())
 				.itemId(entity.getItem().getId())
 				.itemName(entity.getItem().getName())

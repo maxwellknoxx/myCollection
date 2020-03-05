@@ -6,20 +6,20 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.maxwell.myCollection.entity.ReplyEntity;
-import com.maxwell.myCollection.model.Reply;
+import com.maxwell.myCollection.entity.Reply;
+import com.maxwell.myCollection.model.ReplyDTO;
 
 @Component
 public class ReplyMapper {
 
-	public static Reply convertEntityToModel(ReplyEntity entity) {
-		return Reply.builder().id(entity.getId()).reply(entity.getReply()).commentaryId(entity.getCommentary().getId())
+	public static ReplyDTO getDTO(Reply entity) {
+		return ReplyDTO.builder().id(entity.getId()).reply(entity.getReply()).commentaryId(entity.getCommentary().getId())
 				.profileId(entity.getProfile().getId()).profileName(entity.getProfile().getName()).build();
 	}
 
-	public static List<Reply> convertEntityToModelList(List<ReplyEntity> entities) {
+	public static List<ReplyDTO> getListDTO(List<Reply> entities) {
 		return entities.stream().filter(Objects::nonNull)
-				.map(entity -> Reply.builder().id(entity.getId()).reply(entity.getReply())
+				.map(entity -> ReplyDTO.builder().id(entity.getId()).reply(entity.getReply())
 						.commentaryId(entity.getCommentary().getId()).profileId(entity.getProfile().getId())
 						.profileName(entity.getProfile().getName()).build())
 				.collect(Collectors.toList());

@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.maxwell.myCollection.entity.CommentaryEntity;
-import com.maxwell.myCollection.model.Commentary;
+import com.maxwell.myCollection.entity.Commentary;
+import com.maxwell.myCollection.exception.EntityNotFoundException;
+import com.maxwell.myCollection.exception.ResourceNotFoundException;
+import com.maxwell.myCollection.model.CommentaryDTO;
 import com.maxwell.myCollection.repository.CommentaryRepository;
 import com.maxwell.myCollection.service.CommentaryService;
 import com.maxwell.myCollection.utils.CommentaryMapper;
@@ -18,39 +20,36 @@ public class CommentaryServiceImpl implements CommentaryService {
 	private CommentaryRepository repository;
 
 	@Override
-	public List<Commentary> findAll() {
-		List<CommentaryEntity> list = repository.findAll();
+	public List<CommentaryDTO> findAll() throws ResourceNotFoundException {
+		List<Commentary> list = repository.findAll();
 		if (list.isEmpty()) {
-			return null;
+			throw new ResourceNotFoundException(Commentary.class, "No commentary found");
 		}
-		return CommentaryMapper.convertEntityToModelList(list);
+		return CommentaryMapper.getListDTO(list);
 	}
 
 	@Override
-	public Commentary findById(Long id) {
-		CommentaryEntity commentary = repository.findById(id).orElse(null);
-		if (commentary == null) {
-			return null;
-		}
-		return CommentaryMapper.convertEntityToModel(commentary);
+	public CommentaryDTO findById(Long id) {
+		return CommentaryMapper.getDTO(repository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(Commentary.class, "id", id.toString())));
 	}
 
 	@Override
-	public Commentary addCommentary(CommentaryEntity commentary) {
-		CommentaryEntity entity = repository.save(commentary);
+	public CommentaryDTO addCommentary(Commentary commentary) {
+		Commentary entity = repository.save(commentary);
 		if (entity == null) {
 			return null;
 		}
-		return CommentaryMapper.convertEntityToModel(entity);
+		return CommentaryMapper.getDTO(entity);
 	}
 
 	@Override
-	public Commentary updateCommentary(CommentaryEntity commentary) {
-		CommentaryEntity entity = repository.save(commentary);
+	public CommentaryDTO updateCommentary(Commentary commentary) {
+		Commentary entity = repository.save(commentary);
 		if (entity == null) {
 			return null;
 		}
-		return CommentaryMapper.convertEntityToModel(entity);
+		return CommentaryMapper.getDTO(entity);
 	}
 
 	@Override
@@ -64,12 +63,12 @@ public class CommentaryServiceImpl implements CommentaryService {
 	}
 
 	@Override
-	public List<Commentary> findByItemId(Long id) {
-		List<CommentaryEntity> list = repository.findByItemId(id);
+	public List<CommentaryDTO> findByItemId(Long id) throws ResourceNotFoundException {
+		List<Commentary> list = repository.findByItemId(id);
 		if (list.isEmpty()) {
-			return null;
+			throw new ResourceNotFoundException(Commentary.class, "No commentary found");
 		}
-		return CommentaryMapper.convertEntityToModelList(list);
+		return CommentaryMapper.getListDTO(list);
 	}
 
 }

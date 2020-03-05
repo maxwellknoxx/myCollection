@@ -11,7 +11,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Item {
+public class ItemDTO {
 
 	private Long id;
 	private String categoryName;
@@ -25,6 +25,6 @@ public class Item {
 	private String trade;
 	private String status;
 	private String location;
-	private List<Commentary> commentaries;
+	private List<CommentaryDTO> commentaries;
 
 }

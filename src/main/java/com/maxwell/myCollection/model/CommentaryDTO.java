@@ -11,13 +11,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Commentary {
+public class CommentaryDTO {
 
 	private Long id;
 	private String commentary;
 	private Long itemId;
 	private String username;
 	private Long userId;
-	private List<Reply> replies;
+	private List<ReplyDTO> replies;
 
 }

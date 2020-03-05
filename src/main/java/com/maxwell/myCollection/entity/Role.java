@@ -2,33 +2,36 @@ package com.maxwell.myCollection.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.NaturalId;
 
+import com.maxwell.myCollection.enums.RoleName;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
+
 @Setter
+@Getter
 @ToString
 @Entity
-@Table(name = "categories")
-public class CategoryEntity {
+@Table(name = "roles")
+public class Role {
 
 	@Id
-	@GeneratedValue
-	@Column(name = "category_id_pk")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Enumerated(EnumType.STRING)
 	@NaturalId
-	@Column(name = "name", nullable = false)
-	private String name;
-
-	@Column(name = "description", nullable = false)
-	private String description;
+	@Column(length = 60)
+	private RoleName name;
 
 }

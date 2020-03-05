@@ -1,6 +1,6 @@
 package com.maxwell.myCollection.model;
 
-public class Message {
+public class MessageDTO {
 
 	private Long id;
 	private Long idSender;

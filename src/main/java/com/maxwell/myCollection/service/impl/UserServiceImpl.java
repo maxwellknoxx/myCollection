@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.maxwell.myCollection.entity.UserEntity;
-import com.maxwell.myCollection.model.UserModel;
+import com.maxwell.myCollection.entity.User;
+import com.maxwell.myCollection.exception.EntityNotFoundException;
+import com.maxwell.myCollection.exception.ResourceNotFoundException;
+import com.maxwell.myCollection.model.UserModelDTO;
 import com.maxwell.myCollection.repository.UserRepository;
 import com.maxwell.myCollection.service.UserService;
 import com.maxwell.myCollection.utils.UserMapper;
@@ -18,46 +20,39 @@ public class UserServiceImpl implements UserService {
 	private UserRepository repository;
 
 	@Override
-	public List<UserModel> findAll() {
-		List<UserEntity> list = repository.findAll();
-		if (list == null) {
-			return null;
+	public List<UserModelDTO> findAll() throws ResourceNotFoundException {
+		List<User> list = repository.findAll();
+		if (list.isEmpty()) {
+			throw new ResourceNotFoundException(User.class, "No user found");
 		}
-		return UserMapper.entityToModelList(list);
+		return UserMapper.getListDTO(list);
 	}
 
 	@Override
-	public UserModel findById(Long id) {
-		UserEntity entity = repository.findById(id).orElseThrow();
-		if (entity == null) {
-			return null;
-		}
-		return UserMapper.entityToModel(entity);
+	public UserModelDTO findById(Long id) {
+		return UserMapper.getDTO(repository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(User.class, "id", id.toString())));
 	}
 
-	public UserEntity getUser(Long id) {
-		UserEntity entity = repository.findById(id).orElseThrow();
-		if (entity == null) {
-			return null;
-		}
-		return entity;
+	public User getUser(Long id) {
+		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(User.class, "id", id.toString()));
 	}
 
 	@Override
-	public UserModel updateUser(UserEntity user) {
-		UserEntity entity = repository.save(user);
+	public UserModelDTO updateUser(User user) {
+		User entity = repository.save(user);
 		if (entity == null) {
 			return null;
 		}
-		return UserMapper.entityToModel(entity);
+		return UserMapper.getDTO(entity);
 	}
 
-	public UserModel save(UserEntity user) {
-		UserEntity entity = repository.save(user);
+	public UserModelDTO save(User user) {
+		User entity = repository.save(user);
 		if (entity == null) {
 			return null;
 		}
-		return UserMapper.entityToModel(entity);
+		return UserMapper.getDTO(entity);
 	}
 
 	@Override
@@ -71,29 +66,20 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserModel findByEmail(String email) {
-		UserEntity entity = repository.findByEmail(email).orElseThrow();
-		if (entity == null) {
-			return null;
-		}
-		return UserMapper.entityToModel(entity);
+	public UserModelDTO findByEmail(String email) {
+		return UserMapper.getDTO(repository.findByEmail(email)
+				.orElseThrow(() -> new EntityNotFoundException(User.class, "Email -> ", email)));
+	}
+
+	public User getByEmail(String email) {
+		return repository.findByEmail(email)
+				.orElseThrow(() -> new EntityNotFoundException(User.class, "Email -> ", email));
 	}
 
 	@Override
-	public UserModel findByUsername(String username) {
-		UserEntity entity = repository.findByUsername(username).orElseThrow(); //ver isso depois
-		if (entity == null) {
-			return null;
-		}
-		return UserMapper.entityToModel(entity);
-	}
-
-	public UserEntity getByEmail(String email) {
-		UserEntity entity = repository.findByEmail(email).orElseThrow();
-		if (entity == null) {
-			return null;
-		}
-		return entity;
+	public UserModelDTO findByUsername(String username) {
+		return UserMapper.getDTO(repository.findByUsername(username)
+				.orElseThrow(() -> new EntityNotFoundException(User.class, "Username -> ", username)));
 	}
 
 }

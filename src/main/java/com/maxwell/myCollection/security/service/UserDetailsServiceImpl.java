@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.maxwell.myCollection.entity.UserEntity;
+import com.maxwell.myCollection.entity.User;
 import com.maxwell.myCollection.repository.UserRepository;
 
 @Service
@@ -19,7 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserEntity user = repository.findByUsername(username)
+		User user = repository.findByUsername(username)
                 .orElseThrow(() -> 
                       new UsernameNotFoundException("User Not Found with -> username or email : " + username)
       );

@@ -2,20 +2,20 @@ package com.maxwell.myCollection.service;
 
 import java.util.List;
 
-import com.maxwell.myCollection.entity.UserEntity;
-import com.maxwell.myCollection.model.UserModel;
+import com.maxwell.myCollection.entity.User;
+import com.maxwell.myCollection.model.UserModelDTO;
 
 public interface UserService {
 
-	List<UserModel> findAll();
+	List<UserModelDTO> findAll();
 
-	UserModel findById(Long id);
+	UserModelDTO findById(Long id);
 	
-	UserModel findByEmail(String email);
+	UserModelDTO findByEmail(String email);
 
-	UserModel findByUsername(String username);
+	UserModelDTO findByUsername(String username);
 	
-	UserModel updateUser(UserEntity user);
+	UserModelDTO updateUser(User user);
 
 	Boolean removeUser(Long id);
 

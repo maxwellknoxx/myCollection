@@ -5,8 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.maxwell.myCollection.entity.OfferEntity;
-import com.maxwell.myCollection.model.Offer;
+import com.maxwell.myCollection.entity.Offer;
+import com.maxwell.myCollection.exception.ResourceNotFoundException;
+import com.maxwell.myCollection.model.OfferDTO;
 import com.maxwell.myCollection.repository.OfferRepository;
 import com.maxwell.myCollection.service.OfferService;
 import com.maxwell.myCollection.utils.OfferMapper;
@@ -18,40 +19,39 @@ public class OfferServiceImpl implements OfferService {
 	private OfferRepository repository;
 
 	@Override
-	public List<Offer> findAll() {
-		List<OfferEntity> list = repository.findAll();
+	public List<OfferDTO> findAll() throws ResourceNotFoundException {
+		List<Offer> list = repository.findAll();
 		if (list.isEmpty()) {
-			return null;
+			throw new ResourceNotFoundException(Offer.class, "No offer found");
 		}
-		return OfferMapper.convertEntityToModelList(list);
+		return OfferMapper.getListDTO(list);
 	}
 
 	@Override
-	public Offer findById(Long id) {
-		OfferEntity entity = repository.findById(id).orElse(null);
+	public OfferDTO findById(Long id) throws ResourceNotFoundException {
+		Offer entity = repository.findById(id).orElse(null);
 		if (entity == null) {
-			return null;
+			throw new ResourceNotFoundException(Offer.class, "No offer found");
 		}
-		return OfferMapper.converEntityToModel(entity);
-
+		return OfferMapper.getDTO(entity);
 	}
 
 	@Override
-	public Offer addOffer(OfferEntity offer) {
-		OfferEntity entity = repository.save(offer);
+	public OfferDTO addOffer(Offer offer) {
+		Offer entity = repository.save(offer);
 		if (entity == null) {
 			return null;
 		}
-		return OfferMapper.converEntityToModel(entity);
+		return OfferMapper.getDTO(entity);
 	}
 
 	@Override
-	public Offer updateOffer(OfferEntity offer) {
-		OfferEntity entity = repository.save(offer);
+	public OfferDTO updateOffer(Offer offer) {
+		Offer entity = repository.save(offer);
 		if (entity == null) {
 			return null;
 		}
-		return OfferMapper.converEntityToModel(entity);
+		return OfferMapper.getDTO(entity);
 	}
 
 	@Override

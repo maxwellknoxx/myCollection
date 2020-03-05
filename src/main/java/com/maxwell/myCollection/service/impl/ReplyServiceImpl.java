@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.maxwell.myCollection.entity.ReplyEntity;
-import com.maxwell.myCollection.model.Reply;
+import com.maxwell.myCollection.entity.Reply;
+import com.maxwell.myCollection.exception.EntityNotFoundException;
+import com.maxwell.myCollection.exception.ResourceNotFoundException;
+import com.maxwell.myCollection.model.ReplyDTO;
 import com.maxwell.myCollection.repository.ReplyRepository;
 import com.maxwell.myCollection.service.ReplyService;
 import com.maxwell.myCollection.utils.ReplyMapper;
@@ -18,39 +20,36 @@ public class ReplyServiceImpl implements ReplyService {
 	private ReplyRepository repository;
 
 	@Override
-	public List<Reply> findAll() {
-		List<ReplyEntity> list = repository.findAll();
+	public List<ReplyDTO> findAll() throws ResourceNotFoundException {
+		List<Reply> list = repository.findAll();
 		if (list.isEmpty()) {
-			return null;
+			throw new ResourceNotFoundException(Reply.class, "No reply found");
 		}
-		return ReplyMapper.convertEntityToModelList(list);
+		return ReplyMapper.getListDTO(list);
 	}
 
 	@Override
-	public Reply findById(Long id) {
-		ReplyEntity entity = repository.findById(id).orElse(null);
-		if (entity == null) {
-			return null;
-		}
-		return ReplyMapper.convertEntityToModel(entity);
+	public ReplyDTO findById(Long id) {
+		return ReplyMapper.getDTO(repository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(Reply.class, "id", id.toString())));
 	}
 
 	@Override
-	public Reply addReply(ReplyEntity reply) {
-		ReplyEntity entity = repository.save(reply);
+	public ReplyDTO addReply(Reply reply) {
+		Reply entity = repository.save(reply);
 		if (entity == null) {
 			return null;
 		}
-		return ReplyMapper.convertEntityToModel(entity);
+		return ReplyMapper.getDTO(entity);
 	}
 
 	@Override
-	public Reply updateReply(ReplyEntity reply) {
-		ReplyEntity entity = repository.save(reply);
+	public ReplyDTO updateReply(Reply reply) {
+		Reply entity = repository.save(reply);
 		if (entity == null) {
 			return null;
 		}
-		return ReplyMapper.convertEntityToModel(entity);
+		return ReplyMapper.getDTO(entity);
 	}
 
 	@Override

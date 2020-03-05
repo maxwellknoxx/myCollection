@@ -2,18 +2,18 @@ package com.maxwell.myCollection.service;
 
 import java.util.List;
 
-import com.maxwell.myCollection.entity.CategoryEntity;
-import com.maxwell.myCollection.model.Category;
+import com.maxwell.myCollection.entity.Category;
+import com.maxwell.myCollection.model.CategoryDTO;
 
 public interface CategoryService {
 
-	List<Category> findAll();
+	List<CategoryDTO> findAll();
 
-	Category findById(Long id);
+	CategoryDTO findById(Long id);
 
-	Category addCategory(CategoryEntity category);
+	CategoryDTO addCategory(Category category);
 
-	Category updateCategory(CategoryEntity category);
+	CategoryDTO updateCategory(Category category);
 
 	Boolean removeCategory(Long id);
 
